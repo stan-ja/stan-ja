@@ -26,7 +26,7 @@ int max(int x[])
 ```text
 int sum(int x[])
 ```
-`x`の要素の総和を返す。ただし、`x`のsize`N`によっては以下のように返す。
+`x`の要素の総和を返す。ただし、`x`のsize`N`によっては以下のように返す。　　
 ![fig1](https://raw.githubusercontent.com/stan-ja/stan-ja/master/part04/chap33/fig/fig1.png)
 ```text
 real sum(real x[])
@@ -39,7 +39,7 @@ real prod(real x[])
 ```text
 real prod(int x[])
 ```
-`x`の要素の総乗を返す。
+`x`の要素の総乗を返す。　　
 ![fig2](https://raw.githubusercontent.com/stan-ja/stan-ja/master/part04/chap33/fig/fig2.png)
 ```text
 real log_sum_exp(real x[])
