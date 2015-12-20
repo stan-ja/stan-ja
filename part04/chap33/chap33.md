@@ -1,6 +1,6 @@
 ## 33. Array型の演算
 
-### 33.1 代表値の作成
+### 33.1 Arrayから1つの値の作成
 次の演算子はarrayをインプットとしてとり、一つの値をアウトプットとして返すものです。　**`The　boundary values for size 0 arrays are the unit with respect to the combination operation
 (min, max, sum, or product).`**
 
