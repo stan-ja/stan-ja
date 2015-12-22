@@ -59,7 +59,7 @@ git add hoge/huga.md
 git commit -m '１章を翻訳しました＜＜コミットメッセージ'
 ```
 
-* コミット内容をリモートブランチに追加します
+* コミット内容をリモートブランチにpushします
 
 ```
 git push origin create/partxx/chapyy
