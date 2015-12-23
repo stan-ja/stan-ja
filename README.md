@@ -37,7 +37,13 @@
 * 最新のremoteにあるmaster branchを取得します．
 
 ```
-% git pull origin master
+git pull origin master
+```
+
+レポジトリ自体を初めて取得する場合は
+
+```
+git clone https://github.com/stan-ja/stan-ja
 ```
 
 * 作業用のbranchを切ります
