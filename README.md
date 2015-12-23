@@ -37,6 +37,7 @@
 * 最新のremoteにあるmaster branchを取得します．
 
 ```
+git checkout master
 git pull origin master
 ```
 
