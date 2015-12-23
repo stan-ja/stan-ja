@@ -83,6 +83,6 @@ git push origin create/partxx/chapyy
 ## 参考サイト
 
 * [英語のコメントやissueで頻出する略語の意味](http://qiita.com/uasi/items/86c3a09d17792ab62dfe)
-
+* [LGTM画像はこちらから](http://www.lgtm.in/)
 
 
