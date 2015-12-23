@@ -1,0 +1,27 @@
+machine:
+  timezone: Asia/Tokyo
+
+dependencies:
+  pre:
+    - wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | sudo apt-key add -
+    - wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | sudo apt-key add -
+    - sudo wget https://www.ubuntulinux.jp/sources.list.d/precise.list -O /etc/apt/sources.list.d/ubuntu-ja.list
+    - sudo aptitude update -y
+    - sudo aptitude install -y texlive-lang-cjk texlive-xetex fonts-ipafont
+    - wget https://github.com/jgm/pandoc/releases/download/1.14.1/pandoc-1.14.1-1-amd64.deb
+    - sudo dpkg -i pandoc-1.14.1-1-amd64.deb
+
+test:
+  post:
+    - build/test_all.sh
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - build/build_all.sh
+  development:
+    branch: /^.*chap[0-9]*.*$/
+    commands:
+      - build/build_chapter.sh
+
