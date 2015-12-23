@@ -76,4 +76,13 @@ git push origin create/partxx/chapyy
 
 * レビュワーの意見を元に再度修正を行い `add` > `commit` > `push` を行います
 
-* lgtmがでたらmasterブランチにmergeしましょう．
+* レビュワーからの問題なしのサインが出たらそのbranchをmasterにmergeします
+	* この「問題なし」のサインはしばしばLGTM (looks good to me = いいと思うよ)と呼ばれています．
+
+
+## 参考サイト
+
+* [英語のコメントやissueで頻出する略語の意味](http://qiita.com/uasi/items/86c3a09d17792ab62dfe)
+
+
+
