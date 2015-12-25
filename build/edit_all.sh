@@ -13,7 +13,7 @@ do
   if [ -s "$md" ]
   then
     tmpfile=$(mktemp)
-    dir=`pwd | sed -e 's/\//\\\\\//g'`
+    dir=`dirname "$md" | sed -e 's/\//\\\\\//g'`
     replace_math="s/\!\[\$\$\(.*\)\$\$\](.*)/\$\$\1\$\$/g"
     replace_paths="s/\!\[\(.*\)\](\(.*\))/\!\[\1\](${dir}\/\2)/g"
     cat "$md" \
