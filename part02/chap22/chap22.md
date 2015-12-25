@@ -42,7 +42,7 @@ If, however, you compiled a Stan program today using one set of flags, took the 
 
 The data needs to be the same down to the bit level. For example, if you are running in RStan, Rcpp handles the conversion between R’s floating point numbers and C++ doubles. If Rcpp changes the conversion process or use different types, the results are not guaranteed to be the same down to the bit level.
 
-コンパイラとコンパイラの設定も同じ問題を起こす可能性があります。インテル製コンパイラで再現性をいかにコントロールするかについての素敵な議論はCoden and Kreirzer(2014)を読んでください。 **`意訳しすぎ？参考文献へのリンクが文中に埋められているときはどう訳すべき？`**
+コンパイラとコンパイラの設定も同じ問題を起こす可能性があります。インテル製コンパイラで再現性をいかにコントロールするかについての素敵な議論はCoden and Kreirzer(2014)を読んでください。 
 
 **`PDFに埋められたBibliographyへのリンクはどう扱う？`**
 
