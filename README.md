@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/stan-ja/stan-ja.svg?style=svg)](https://circleci.com/gh/stan-ja/stan-ja)
+
 # Modeling Language User’s Guide and Reference Manual, v2.9.0 (日本語訳)
 
 ## 目的
