@@ -28,4 +28,8 @@ deployment:
     branch: /^.*chap[0-9]*.*$/
     commands:
       - build/build_chapter.sh
+  test:
+    branch: /^.*circle.*$/
+    commands:
+      - build/build_all.sh
 

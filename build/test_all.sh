@@ -4,7 +4,7 @@ source `dirname $0`/env.sh
 
 code=0
 
-for md in `find . -name "chap*.md"`
+for md in `get_markdown`
 do
   echo -n "${md}: " >&2
   if [ -s "${md}" ]

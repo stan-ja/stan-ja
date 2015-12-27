@@ -1,7 +1,10 @@
 #!/bin/bash
 
 source `dirname $0`/env.sh
-target=`find . -name "chap*.md" | sort`
+target=`get_markdown`
 
-$PANDOC -o "$CIRCLE_ARTIFACTS/stan-reference-2.9.0-ja.pdf" $target
+$PANDOC \
+  --toc \
+  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja.pdf" \
+  $target
 
