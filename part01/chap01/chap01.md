@@ -43,3 +43,28 @@ Stan.jlはJuliaにおけるStanのインターフェースです．これもMatl
 StataStanはStataにおけるStanのインターフェースです．MatlabStan，Stan.jl と同様にこれもCmdStanのラッパーです．StataStanのホームページは下記になります．
 
 [http://mc-stan.org/stata-stan.html](http://mc-stan.org/stata-stan.html)
+
+
+## 1.3 Stanのプログラム
+Stanのプログラムは条件付き確率分布 $p(\theta|x, y)$により定義されます．ここで$\theta$はモデリングしたい未知の値の列(例： モデルの変数, 隠れ変数, 欠損データ, 将来の予測値)で，$y$はモデリングされる既知の変数列，$x$はモデリングされていない説明変数の列で定数です（例：サイズ，ハイパーパラメタ）．
+
+Stanのプログラム，変数の型宣言とステートメントからなります．変数の型には制約が有る，もしくは無い，整数，実数，ベクトル，行列はもちろん，その他の型の（多次元な）配列もあります．
+
+変数は，その使い方に応じて，data, transformed data, parameter, transformed parameter, generated quantityなるブロックの中で定義されます．また制約のないローカル変数はステートメントブロックで定義されます．
+
+transformed data，transformed parameter，generated quantitiesのブロックはそのブロック自身で宣言された変数の定義文を含みます．
+
+特別なmodelブロックはモデルの対数尤度を定義する文からなります．
+
+modelブロックではBUGS風のサンプリング記法が逐次的な，変数の対数尤度や，対数尤度関数を定義する変数で用いられます．
+
+対数尤度の変数もまた，直接アクセスすることができ，ユーザ定義関数や，変換のヤコビアンも利用できます．
+**
+ The log probability variable may also be accessed directly, allowing user-defined probability functions and Jacobians of transforms.
+**
+
+
+
+
+
+
