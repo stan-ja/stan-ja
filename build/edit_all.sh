@@ -17,6 +17,7 @@ do
     replace_math="s/\!\[\$\$\(.*\)\$\$\](.*)/\$\$\1\$\$/g"
     replace_paths="s/\!\[\(.*\)\](\(.*\))/\!\[\1\](${dir}\/\2)/g"
     cat "$md" \
+      | sed -e 's/[、，]/, /g' | sed -e 's/[。．]/. /g' \
       | sed -e $replace_math \
       | sed -e $replace_paths \
       >"$tmpfile"
