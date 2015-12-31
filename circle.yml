@@ -16,7 +16,7 @@ checkout:
     - build/edit_all.sh
 
 test:
-  post:
+  override:
     - build/test_all.sh
 
 deployment:
@@ -28,6 +28,7 @@ deployment:
     branch: /^.*chap[0-9]*.*$/
     commands:
       - build/build_chapter.sh
+      - build/notify_github.sh
   test:
     branch: /^.*circle.*$/
     commands:
