@@ -20,13 +20,11 @@ Stanは離散パラメータのサンプリングをサポートしていませ�
 
 Fonnesbeck et al. (2013)の3.1節では、年<var>t</var>における災害発生数<var>D<sub>t</sub></var>（**訳注: 原文は'disaster rate'ですが、原典では'number of disasters'となので、「災害発生数」と思われます**）のポアソンモデルが紹介されています。このモデルには、初期発生率(<var>e</var>)と後期発生率(<var>l</var>)の2つの発生率パラメータがあり、ある時点<var>s</var>で切り替わるとされています。フルモデルは、潜在離散パラメータ<var>s</var>を使うと以下のようになります。
 
-![$$ e &\sim \mathrm{Exponential}(r_e) \\ l &\sim \mathrm{Exponential}(r_l) \\
-s &\sim \mathrm{Uniform}(1,T) \\ D_t &\sim \mathrm{Poisson}(t < s\;?\;e : l) $$](fig/fig01.png)
+![$$\begin{array}{ll}e &\sim \mathrm{Exponential}(r_e) \\ l &\sim \mathrm{Exponential}(r_l) \\ s &\sim \mathrm{Uniform}(1,T) \\ D_t &\sim \mathrm{Poisson}(t < s\;?\;e : l)\end{array}$$](fig/fig01.png)
 
 最後の行では条件演算子（3値演算子ともいう）を使っています。これは、Cおよびそれに類する言語から借りてきたものです。条件演算子は、Rの`ifelse`と同じ挙動を示しますが、より簡潔な記法を使い、疑問符(?)とコロン(:)で3つの引数を区切ります。条件演算子は以下のように定義されます。
 
-![$$ c\;?\;x_1 : x_2 = \begin{cases} x_1 \quad c\text{が真（つまり非零
-）のとき} \\ x_2 \quad c\text{が偽（つまり零）のとき} \end{cases} $$](fig/fig02.png)
+![$$c\;?\;x_1 : x_2 = \begin{cases} x_1 \quad c\text{が真（つまり非零）のとき} \\ x_2 \quad c\text{が偽（つまり零）のとき} \end{cases}$$](fig/fig02.png)
 
 Stan自身は今のところ条件演算子をサポートしていませんが、いずれサポートする予定です。
 
@@ -35,23 +33,23 @@ Stan自身は今のところ条件演算子をサポートしていませんが�
 このモデルをStanでコーディングするには、離散パラメータ<var>s</var>を周辺化消去して、確率関数<var>p(e,l,D<sub>t</sub>)</var>の対数を定義するモデルを作らなくてはなりません。
 フル同時確率は以下のようになります。
 
-![$$ p(e,l,s,D) &= p(e)p(l)p(s)p(D \mid s,e,l) \\ &= \mathrm{Exponential}(e \mid r_{e}) \mathrm{Exponential}(l \mid r_{l}) \mathrm{Uniform}(s \mid 1, T) \\ & \quad \prod_{t=1}^{T}\mathrm{Poisson}(D_{t} \mid t<s\;?\;e : l) $$](fig/fig03.png)
+![$$\begin{array}{ll}p(e,l,s,D) &= p(e)p(l)p(s)p(D \mid s,e,l) \\ &= \mathrm{Exponential}(e \mid r_{e}) \mathrm{Exponential}(l \mid r_{l}) \mathrm{Uniform}(s \mid 1, T) \\ & \quad \prod_{t=1}^{T}\mathrm{Poisson}(D_{t} \mid t<s\;?\;e : l)\end{array}$$](fig/fig03.png)
 
 周辺化のため、別のやり方で事前分布と尤度とに分解します。
 
-![$$ p(e,l,D) = p(e,l)p(D \mid e,l) $$](fig/fig04.png)
+![$$p(e,l,D) = p(e,l)p(D \mid e,l)$$](fig/fig04.png)
 
 ここで、<var>s</var>を周辺化した尤度は以下のように定義されます。
 
-![$$ p(D \mid e,l) &= \sum_{s=1}^{T}p(s,D \mid e,l) \\ &= \sum_{s=1}^{T}p(s)p(D \mid s,e,l) \\ &= \sum_{s=1}^{T}\mathrm{Uniform}(s \mid 1,T)\prod_{t=1}^{T}\mathrm{Poisson}(D_{t} \mid t<s\;?\;e:l) $$](fig/fig05.png)
+![$$\begin{array}{ll}p(D \mid e,l) &= \sum_{s=1}^{T}p(s,D \mid e,l) \\ &= \sum_{s=1}^{T}p(s)p(D \mid s,e,l) \\ &= \sum_{s=1}^{T}\mathrm{Uniform}(s \mid 1,T)\prod_{t=1}^{T}\mathrm{Poisson}(D_{t} \mid t<s\;?\;e:l)\end{array}$$](fig/fig05.png)
 
 Stanは対数スケールで処理をおこないますので、対数尤度が必要です。
 
-![$$ \log p(D \mid e,l) &= \mathrm{log\_sum\_exp}_{s=1}^{T}\left(\log\mathrm{Uniform}(s \mid 1,T) \\ &\quad + \sum_{t=1}^{T}\log\mathrm{Poisson}(D_{t} \mid t<s\;?\;e : l)\right) $$](fig/fig06.png)
+![$$\begin{array}{ll}\log p(D \mid e,l) &= \mathrm{log\_sum\_exp}_{s=1}^{T}\left(\log\mathrm{Uniform}(s \mid 1,T)\right. \\ &\quad\left. + \sum_{t=1}^{T}\log\mathrm{Poisson}(D_{t} \mid t<s\;?\;e : l)\right)\end{array}$$](fig/fig06.png)
 
 ここで、log\_sum\_exp関数は以下のように定義されます。
 
-![$$ \mathrm{log\_sum\_exp}_{n=1}^{N}\alpha_{n} = \log\sum_{n=1}^{N}\exp(\alpha_{n}) $$](fig/fig07.png)
+![$$\mathrm{log\_sum\_exp}_{n=1}^{N}\alpha_{n} = \log\sum_{n=1}^{N}\exp(\alpha_{n})$$](fig/fig07.png)
 
 log\_sum\_exp関数は、Stanでは`log_sum_exp`として組み込まれていますので、これを使ってモデルをそのままコーディングできます。これにより、算術的にも安定し、混合分布モデルの計算も効率的になります。
 
@@ -98,15 +96,15 @@ model {
 
 ある繰り返しにおける`lp[s]`の値は、その繰り返しにおける初期発生率<var>e</var>と後期発生率<var>l</var>の値についてのlog<var>p</var>(<var>s,D</var> | <var>e,l</var>)により与えられます。収束後の各繰り返しにおける初期および後期災害発生率<var>e</var>と<var>l</var>は、事後の<var>p</var>(<var>e,l</var> | <var>D</var>)からMCMCサンプリングにより抽出されます。`lp`の値は、各繰り返しにおけるその時点での<var>e</var>と<var>l</var>の値にもとづいて、<var>p</var>(<var>s</var> | <var>e,l,D</var>)を計算することで正規化できるでしょう。繰り返し全体を平均すると、変化点が<var>s</var>であることの非正規化確率の推定値が得られます。
 
-![$$ p(s \mid D) &\propto q(s \mid D) \\ &= \frac{1}{M}\sum_{m=1}^{M}\exp(\mathrm{lp}[m,s]) $$](fig/fig08.png)
+![$$\begin{array}{ll}p(s \mid D) &\propto q(s \mid D) \\ &= \frac{1}{M}\sum_{m=1}^{M}\exp(\mathrm{lp}[m,s])\end{array}$$](fig/fig08.png)
 
 ここで、`lp`[<var>m,s</var>]は、事後抽出<var>m</var>における変化点<var>s</var>についての`lp`の値を表します。抽出全体を平均すると、<var>e</var>と<var>l</var>の方が周辺化消去され、ある繰り返しでの<var>e</var>と<var>l</var>の値には結果は依存しなくなります。最終的に正規化すると、求めたい量、すなわちデータ<var>D</var>を条件とする、<var>s</var>が変化点であることの事後確率が得られます。
 
-![$$ p(s \mid D) = \frac{q(s \mid D)}{\sum_{s'=1}^{T}q(s' \mid D)} $$](fig/fig09.png)
+![$$p(s \mid D) = \frac{q(s \mid D)}{\sum_{s'=1}^{T}q(s' \mid D)}$$](fig/fig09.png)
 
 Stan 2.4のデフォルトのMCMC実装を使って計算したlog<var>p</var>(<var>s</var> | <var>D</var>)の値のグラフを図12.2に示します。
 
-![対数確率](fig/change-point-posterior.png) ![頻度](fig/s-discrete-posterior.png)
+![変化点の事後推定値のグラフ](fig/change-point.png)
 
 図12.2: 変化点の事後推定値。左) `lp`を使って解析的に計算した、各年が変化点である対数確率。右) `lp`を使って生成した事後分布における変化点の抽出の頻度。左のグラフは対数スケールで、右のグラフは線形スケールです。右側のグラフではサンプリングのために年の範囲が狭くなっていることに注意。<var>s</var>の事後平均はおよそ1891です。
 
@@ -167,7 +165,7 @@ matrix[T,T] lp;
 
 Lincoln-Petersen法(Lincoln, 1930; Petersen, 1896)を集団サイズの推定に使います。
 
-![$$ \hat{N} = \frac{MC}{R} $$](fig/fig10.png)
+![$$\hat{N} = \frac{MC}{R}$$](fig/fig10.png)
 
 この集団推定値は、再捕獲された動物の数が二項分布に従うという確率モデルに基づいたものでしょう。
 
@@ -218,13 +216,13 @@ Cormack-Jolly-Seber (CJS)モデル(Cormack, 1964; Jolly, 1965; Seber, 1965)は�
 
 CJSモデルはまた、潜在離散パラメータ<var>z<sub>i,t</sub></var>を使います。これは、各個体<var>i</var>が時点<var>t</var>で生存しているかどうかを示すものです。
 
-![$$ z_{i,t} \sim \mathrm{Bernoulli}(z_{i,t-1}\;?\;\phi_{t-1} : 0) $$](fig/fig12.png)
+![$$z_{i,t} \sim \mathrm{Bernoulli}(z_{i,t-1}\;?\;\phi_{t-1} : 0)$$](fig/fig12.png)
 
 （**訳注:原文では0と<var>φ</var><sub><var>t</var>-1</sub>が逆になっていますが、条件演算子の定義からするとこちらの方が正しいはずです。**）
 
 この条件によりゾンビが発生することを防ぎます。つまり、動物はいったん死んだらならば、ずっと死んだままになります。データの分布は<var>z</var>を条件として単純に以下のように表されます。
 
-![$$ y_{i,t} \sim \mathrm{Bernoulli}(z_{i,t}\;?\;p_{t} : 0) $$](fig/fig13.png)
+![$$y_{i,t} \sim \mathrm{Bernoulli}(z_{i,t}\;?\;p_{t} : 0)$$](fig/fig13.png)
 
 （**訳注:これも上の式と同様です。**）
 
@@ -236,7 +234,7 @@ CJSモデルはまた、潜在離散パラメータ<var>z<sub>i,t</sub></var>を
 
 潜在離散パラメータ<var>z<sub>i,t</sub></var>の周辺化を簡単にするため、Stanのモデルでは、ある時点<var>t</var>で生存していた個体（死亡していれば、再捕獲率は0です）がもう2度と捕獲されない確率<var>χ<sub>t</sub></var>を必要とします。この量は再帰的に定義されます。
 
-![$$ \chi_{t} = \begin{cases} 1 &\quad t = Tのとき \\ (1 - \phi_{t}) + \phi_{t}(1 - p_{t+1})\chi_{t+1} &\quad t < Tのとき \end{cases} $$](fig/fig14.png)
+![$$\begin{array}{ll}\chi_{t} = \begin{cases} 1 &\quad t = Tのとき \\ (1 - \phi_{t}) + \phi_{t}(1 - p_{t+1})\chi_{t+1} &\quad t < Tのとき \end{cases}\end{array}$$](fig/fig14.png)
 
 ある個体が最終調査時に捕獲された場合、このとき、もう捕獲調査はありませんので、もう捕獲されない確率は1になります。そのため、これが再帰のベースになります。<var>χ<sub>t+1</sub></var>から、再帰的に<var>χ<sub>t</sub></var>を定義しますが、この場合には2つの確率が含まれます。(1)確率(1-<var>φ<sub>t</sub></var>)で、次回調査時点まで生存しない、(2)確率<var>φ<sub>t</sub></var>で、次回調査時点まで生存するが、次回調査時点では確率(1-<var>p</var><sub><var>t</var>+1</sub>)で捕獲されず、かつ、確率<var>χ</var><sub><var>t</var>+1</sub>で、時点<var>t</var>+1で生存していた後に2度と捕獲されない。
 
@@ -247,28 +245,28 @@ CJSモデルはまた、潜在離散パラメータ<var>z<sub>i,t</sub></var>を
 <td>履歴</td><td>捕獲<br>1 2 3</td><td>確率</td>
 </tr>
 <tr>
-<td>0</td><td>- - -</td><td>n/a</td>
+<td>0</td><td>\- \- \-</td><td>n/a</td>
 </tr>
 <tr>
-<td>1</td><td>- - +</td><td>n/a</td>
+<td>1</td><td>\- \- \+</td><td>n/a</td>
 </tr>
 <tr>
-<td>2</td><td>- + -</td><td><var>χ</var><sub>2</sub></td>
+<td>2</td><td>\- \+ \-</td><td><var>χ</var><sub>2</sub></td>
 </tr>
 <tr>
-<td>3</td><td>- + +</td><td><var>φ</var><sub>2</sub><var>φ</var><sub>3</sub></td>
+<td>3</td><td>\- \+ \+</td><td><var>φ</var><sub>2</sub><var>φ</var><sub>3</sub></td>
 </tr>
 <tr>
-<td>4</td><td>+ - -</td><td><var>χ</var><sub>1</sub></td>
+<td>4</td><td>\+ \- \-</td><td><var>χ</var><sub>1</sub></td>
 </tr>
 <tr>
-<td>5</td><td>+ - +</td><td><var>φ</var><sub>1</sub>(1-<var>p<var><sub>2</sub>)<var>φ</var><sub>2</sub><var>p</var><sub>3</sub></td>
+<td>5</td><td>\+ \- \+</td><td><var>φ</var><sub>1</sub>(1-<var>p<var><sub>2</sub>)<var>φ</var><sub>2</sub><var>p</var><sub>3</sub></td>
 </tr>
 <tr>
-<td>6</td><td>+ + -</td><td><var>φ</var><sub>1</sub><var>p</var><sub>2</sub><var>χ</var><sub>2</sub></td>
+<td>6</td><td>\+ \+ \-</td><td><var>φ</var><sub>1</sub><var>p</var><sub>2</sub><var>χ</var><sub>2</sub></td>
 </tr>
 <tr>
-<td>7</td><td>+ + +</td><td><var>φ</var><sub>1</sub><var>p</var><sub>2</sub><var>φ</var><sub>2</sub><var>p</var><sub>3</sub></td>
+<td>7</td><td>\+ \+ \+</td><td><var>φ</var><sub>1</sub><var>p</var><sub>2</sub><var>φ</var><sub>2</sub><var>p</var><sub>3</sub></td>
 </tr>
 </table>
 
@@ -518,13 +516,13 @@ Dawid and Skene (1979)は、データ符号化にノイズのある測定モデ�
 
 あるアイテムの真のカテゴリーは、アイテムの出現率をもとに単純なカテゴリー分布で生成されると仮定します。
 
-![$$ z_{i} \sim \mathsf{Categorical}(\pi) $$](fig/fig15.png)
+![$$z_{i} \sim \mathsf{Categorical}(\pi)$$](fig/fig15.png)
 
 アイテム<var>i</var>についての評価者<var>j</var>の評価<var>y<sub>i,j</sub></var>は、カテゴリー<var>z<sub>i</sub></var>のアイテムに対する評価者<var>i</var>（**訳注: <var>j</var>が正しい?**）のカテゴリカルな応答としてモデル化します。<sup>6</sup>
 
 <sup>6</sup>添字の<var>z</var>[<var>i</var>]は、<var>z<sub>i</sub></var>を読みやすくしたものです。
 
-![$$ y_{i,j} \sim \mathsf{Categorical}(\theta_{j,\pi_{z[i]}}) $$](fig/fig16.png)
+![$$y_{i,j} \sim \mathsf{Categorical}(\theta_{j,\pi_{z[i]}})$$](fig/fig16.png)
 
 ##### 事前分布と階層モデリング
 
@@ -532,11 +530,11 @@ Dawid and Skeneは<var>θ</var>と<var>π</var>の最尤推定値を提供して
 
 Dawid and Skeneの最尤モデルを再現するため、パラメータ<var>θ<sub>j,k</sub></var>と<var>π</var>には<var>K</var>次元単体についての一様事前分布を与えます。そのまま一般化してディリクレ事前分布にします。
 
-![$$ \pi \sim \mathsf{Dirichlet}(\alpha) $$](fig/fig17.png)
+![$$\pi \sim \mathsf{Dirichlet}(\alpha)$$](fig/fig17.png)
 
 および
 
-![$$ \theta_{j,k} \sim \mathsf{Dirichlet}(\beta_{k}) $$](fig/fig18.png)
+![$$\theta_{j,k} \sim \mathsf{Dirichlet}(\beta_{k})$$](fig/fig18.png)
 
 <var>α</var>と<var>β</var>はハイパーパラメータです。<var>θ<sub>j,k</sub></var>の事前分布は<var>k</var>によって変わることができるようにしないといけません。そうすると例えば、偶然よりも良い注釈をする注釈者が、ランダムまたは反対に注釈する注釈者よりも高い事前確率を持てるように<var>β<sub>k,k</sub></var>を大きくできるようになります。
 
@@ -546,21 +544,21 @@ Dawid and Skeneの最尤モデルを再現するため、パラメータ<var>θ<
 
 真のカテゴリーのパラメータ<var>z</var>は離散的ですので、同時事後分布から周辺化消去して、Stanでサンプリングあるいは最尤推定ができるようにします。同時事後分布の因子は以下のようになります。
 
-![$$ p(y,\theta,\pi) = p(y \mid \theta, \pi)p(\pi)p(\theta) $$](fig/fig19.png)
+![$$p(y,\theta,\pi) = p(y \mid \theta, \pi)p(\pi)p(\theta)$$](fig/fig19.png)
 
 ここで、<var>p</var>(<var>y</var> | <var>θ</var>, <var>π</var>)は、次式から<var>z</var>を周辺化消去して得られます。
 
-![$$ p(z, y \mid \theta,\pi) = \prod_{i=1}^{I}\left(\mathsf{Categorial}(z_{i} \mid \pi) \prod_{j=1}^{J}\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right) $$](fig/fig20.png)
+![$$p(z, y \mid \theta,\pi) = \prod_{i=1}^{I}\left(\mathsf{Categorial}(z_{i} \mid \pi) \prod_{j=1}^{J}\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right)$$](fig/fig20.png)
 
 この式はアイテムごとの形式にできます。
 
-![$$ p(z, y \mid \theta,\pi) = \prod_{i=1}^{I}\sum_{k=1}^{K}\left(\mathsf{Categorial}(z_{i} \mid \pi) \prod_{j=1}^{J}\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right) $$](fig/fig21.png)
+![$$p(z, y \mid \theta,\pi) = \prod_{i=1}^{I}\sum_{k=1}^{K}\left(\mathsf{Categorial}(z_{i} \mid \pi) \prod_{j=1}^{J}\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right)$$](fig/fig21.png)
 
 欠測データモデルでは、内側の積の部分で観測されたかどうかのラベルを使うようにするだけでよいでしょう。
 
 Dawid and Skene (1979)は、まったく同じ式を彼らの式(2.7)で導出しています。これは、彼らの期待値最大化(EM)アルゴリズムにおけるEステップに必要となるものです。Stanでは対数スケールでの周辺化確率関数が必要になります。
 
-![$$ \log p(y \mid \theta,\pi) = \sum_{i=1}^{I}\log\left(\sum_{k=1}^{K}\exp\left(\log\mathsf{Categorial}(z_{i} \mid \pi) + \sum_{j=1}^{J}\log\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right)\right) $$](fig/fig22.png)
+![$$\log p(y \mid \theta,\pi) = \sum_{i=1}^{I}\log\left(\sum_{k=1}^{K}\exp\left(\log\mathsf{Categorial}(z_{i} \mid \pi) + \sum_{j=1}^{J}\log\mathsf{Categorical}(y_{i,j} \mid \theta_{j,z[i]})\right)\right)$$](fig/fig22.png)
 
 この式はStanの組込み`log_sum_exp`関数を使ってそのままコーディングできます。
 
