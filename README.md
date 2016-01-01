@@ -2,6 +2,8 @@
 
 # Modeling Language User’s Guide and Reference Manual, v2.9.0 (日本語訳)
 
+最新版の翻訳 PDF は [releases](https://github.com/stan-ja/stan-ja/releases) から取得できます。
+
 ## 目的
 [Modeling Language User’s Guide and Reference Manual, v2.9.0](https://github.com/stan-dev/stan/releases/download/v2.9.0/stan-reference-2.9.0.pdf) の日本語訳の作成です.
 
