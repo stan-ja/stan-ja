@@ -2,6 +2,8 @@
 
 # Modeling Language User’s Guide and Reference Manual, v2.9.0 (日本語訳)
 
+最新版の翻訳 PDF は [releases](https://github.com/stan-ja/stan-ja/releases) から取得できます。
+
 ## 目的
 [Modeling Language User’s Guide and Reference Manual, v2.9.0](https://github.com/stan-dev/stan/releases/download/v2.9.0/stan-reference-2.9.0.pdf) の日本語訳の作成です.
 
@@ -16,7 +18,7 @@
 * sub chapter は ###
 * 文体は丁寧語にしてください.
 * 句読点は翻訳者の自由にしてください. 最終的なpdfにする時には`。`を`. `に, `、`を`, `に置換します.
-* 数式は以下の3択の中から翻訳者が自由に選んでください.
+* ブロック数式は以下の3択の中から翻訳者が自由に選んでください.
   * 3番目の方法はweb上（Github上）ではレンダリングされませんが, pdf化する時には反映されます.
   * 1番目の方法は面倒ですがweb上で見れてpdfも綺麗なので余裕があればお願いします.
   * cf. [chap33](https://github.com/stan-ja/stan-ja/blob/master/part04/chap33/chap33.md)
@@ -33,9 +35,12 @@
 $$ TeX記法 $$
 ```
 
+* インライン数式は任意の表現で構いません. `$`と`$`で囲んでTeX記法を使うこともできます.
 * 複数行に渡るStanコードは\`\`\`と\`\`\`で囲む
 * インラインのStanコードは\`と\`で囲む
 * 自信のない箇所は英文のままにしておく. できれば, \*\*\`と\`\*\*で囲んで強調しておく.
+
+
 
 ## 運用のルールとgitの初歩
 
@@ -96,6 +101,16 @@ git push origin create/partxx/chapyy
 * レビュワーからの問題なしのサインが出たらそのbranchをmasterにmergeします
 	* この「問題なし」のサインはしばしばLGTM (looks good to me = いいと思うよ)と呼ばれています．
 
+
+### 翻訳結果の確認
+
+GitHub上でpull requestを作成すると[CircleCI](https://circleci.com/)で自動的にPDFに変換処理が行われます。
+pull requestページのcommit履歴の横にチェックマークまたはバツ印がつきます。
+これらはCircleCIのビルドページへのリンクになっています。
+
+ビルドが成功している場合はArtifactsというタブが表示されます（ログインしている必要があります）。
+その中にPDFへのリンクが表示されています。
+ビルドが失敗している場合はTest Resultsというタブの`$ build/build_chapter.sh`というブロックをクリックするとエラー詳細が表示されます。
 
 ## 参考サイト
 

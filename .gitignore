@@ -1,0 +1,7 @@
+# OS の隠しファイル
+.DS_Store
+Thumbs.db
+
+# 成果物
+*.pdf
+
