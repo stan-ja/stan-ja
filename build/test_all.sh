@@ -18,10 +18,11 @@ do
   if [ -s "${md}" ]
   then
     time_test=`(time $PANDOC -o "${md%.*}.pdf" "${md}" 2>&1) 2>&1 >"$tmpfile"`
+    pandoc_result=$?
     time_test=`echo $time_test | cut -d' ' -f2 | sed -e 's/^\(.*\)m\(.*\)s$/60*\1+\2/' | bc`
     total_elapsed=`echo "$total_elapsed + $time_test" | bc`
     error_message=`cat "$tmpfile"`
-    if [ $? -eq 0 ]
+    if [ $pandoc_result -eq 0 ]
     then
       result_collector="${result_collector}<testcase classname=\"${md}\" name=\"`basename ${md}`\" time=\"${time_test}\" />
 "
