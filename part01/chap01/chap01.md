@@ -46,22 +46,32 @@ StataStanはStataにおけるStanのインターフェースです．MatlabStan�
 
 
 ## 1.3 Stanのプログラム
-Stanのプログラムは条件付き確率分布 $p(\theta|x, y)$により定義されます．ここで$\theta$はモデリングしたい未知の値の列(例： モデルの変数, 隠れ変数, 欠損データ, 将来の予測値)で，$y$はモデリングされる既知の変数列，$x$はモデリングされていない説明変数の列で定数です（例：サイズ，ハイパーパラメタ）．
+Stanのプログラムは条件付き確率分布 $p(\theta|x, y)$により定義されます．ここで$\theta$はモデリングしたい未知の値の列(例： モデルの変数, 隠れ変数, 欠損データ, 将来の予測値)で，$y$はモデリングされる既知の変数列，$x$はモデリングされない説明変数の列で定数です（例：サイズ，ハイパーパラメタ）．
 
-Stanのプログラム，変数の型宣言とステートメントからなります．変数の型には制約が有る，もしくは無い，整数，実数，ベクトル，行列はもちろん，その他の型の（多次元な）配列もあります．
+Stanのプログラムは，変数の型宣言と文からなります．変数の型には整数，実数，ベクトル，行列はもちろん，その他の型の（多次元な）配列があり，それぞれ値を制限することもできます．
 
-変数は，その使い方に応じて，data, transformed data, parameter, transformed parameter, generated quantityなるブロックの中で定義されます．また制約のないローカル変数はステートメントブロックで定義されます．
+変数は，その役割に応じて，data, transformed data, parameter, transformed parameter, generated quantityなるブロックの中で定義され，制約のないローカル変数はステートメントブロックで定義することができます．
 
-transformed data，transformed parameter，generated quantitiesのブロックはそのブロック自身で宣言された変数の定義文を含みます．
+transformed data，transformed parameter，generated quantitiesのブロックは，そのブロックで宣言された変数の定義文を含んでいます．
 
-特別なmodelブロックはモデルの対数尤度を定義する文からなります．
+特別なmodelブロックはモデルの対数尤度を定義する文で構成されています．またBUGS風のサンプリング記法が対数尤度をインクリメントするための略記として利用することが出来，その値により対数尤度関数が定義されます．
 
-modelブロックではBUGS風のサンプリング記法が逐次的な，変数の対数尤度や，対数尤度関数を定義する変数で用いられます．
+対数尤度の変数はユーザ定義関数と，その変換のヤコビアンに直接アクセスすることができます．
 
-対数尤度の変数もまた，直接アクセスすることができ，ユーザ定義関数や，変換のヤコビアンも利用できます．
-**
- The log probability variable may also be accessed directly, allowing user-defined probability functions and Jacobians of transforms.
-**
+### 変数の制限
+変数の制限はStanにおいて，とくにparametersにおいて重要な要素です．Stanが効率的にサンプリングをするためには，制約を課した変数に関しては，モデルブロックにおいてその台（サポート）を含んでいる必要があります（言い換えると，ゼロでない事後確率をもつ必要があります）．
+
+dataブロックとtransformed dataブロックにおいて，変数の制約はただ入力や変換のエラーを確認するのみです．transformed parametersブロックにおける制約は，パラメタの制約，もしくはランダムウォーク時にもその条件を満たす必要があり，さもなくばサンプリングは失敗します．generated quantitiesにおける制約は，サンプリングが成功させるか，もしくは停止させます．そのブロックが評価される時点でそのドローを棄却するにはタイミングが遅すぎるためです．
+
+### 実行命令
+Stanの文は命令として解釈されるため，順序が重要です．単一の文は変数に対する値の割り付けで，そうした文の列（と必要に応じて局所変数の定義）によりブロックは構成されます．そしてStanもまたRやBUGSで使われていた有限なfor-eachのループを提供しています．
+
+### 確率的プログラミング言語
+Stanは命令的で確率的なプログラミング言語です．ドメイン特化言語のインスタンスで，つまりは統計的志向という特定領域のために開発されました．
+確率変数が正真正銘の第一級オブジェクトであるという点で確率的プログラミング言語です．In Stan, variables may be treated as random, and among the random variables, some are observed and some are unknown and need to be estimated or used for posterior predictive inference. Observed random variables are declared as data and unobserved random variables are declared as parameters (including transformed parameters, generated quantities, and local variables depend- ing on them). For the unobserved random variables, it is possible to sample them
+22
+either marginally or jointly, estimate their means and variance, or plug them in for downstream posterior predictive inference.
+
 
 
 
