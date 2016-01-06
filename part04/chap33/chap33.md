@@ -28,7 +28,7 @@ int sum(int x[])
 ```
 `x`の要素の総和を返す。ただし、`x`のsize`N`によっては以下のように返す。　　
 
-![fig1](https://raw.githubusercontent.com/stan-ja/stan-ja/master/part04/chap33/fig/fig1.png)
+![$$\mbox{\tt sum}(x) = \left\{\begin{array}{ll} \sum_{n=1}^{N}x_{n} & \mbox{if} N > 0 \\ 0 & \mbox{if} N = 0 \end{array}\right.$$](fig/fig1.png)
 ```text
 real sum(real x[])
 ```
@@ -42,7 +42,7 @@ real prod(int x[])
 ```
 `x`の要素の総乗を返す。　　
 
-![fig2](https://raw.githubusercontent.com/stan-ja/stan-ja/master/part04/chap33/fig/fig2.png)
+![$$\mbox{\tt product}(x) = \left\{\begin{array}{ll} \prod_{n=1}^{N}x_{n} & \mbox{if} N > 0 \\ 1 & \mbox{if} N = 0 \end{array}\right.$$](fig/fig2.png)
 ```text
 real log_sum_exp(real x[])
 ```
