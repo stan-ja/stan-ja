@@ -8,16 +8,22 @@ then
   exit 0
 fi
 
-artifact_filepath="${CIRCLE_ARTIFACTS}/stan-reference-2.9.0-ja.pdf"
-if [ ! -e "$artifact_filepath" ]
+artifact_filepath_base="${CIRCLE_ARTIFACTS}/stan-reference-2.9.0-ja"
+artifact_filepath_pdf="${artifact_filepath_base}.pdf"
+artifact_filepath_html="${artifact_filepath_base}.html"
+if [ ! -e "$artifact_filepath_pdf" ]
 then
-  echo "No Artifact" >&2
+  echo "No Artifact PDF" >&2
+  exit 0
+fi
+if [ ! -e "$artifact_filepath_html" ]
+then
+  echo "No Artifact HTML" >&2
   exit 0
 fi
 
 build_path="gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}"
 build_url="https://circleci.com/${build_path}"
-artifact_url="https://circle-artifacts.com/${build_path}/artifacts/${CIRCLE_NODE_INDEX}${artifact_filepath}"
 
 release_create_url="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases"
 release_name="stan-reference-2.9.0-ja draft version ${CIRCLE_BUILD_NUM}"
@@ -40,11 +46,20 @@ then
   exit 1
 fi
 
-curl \
-  -X POST \
-  -H "Authorization: token $GITHUB_API_TOKEN" \
-  -H "Accept: application/vnd.github.v3+json" \
-  -H "Content-Type: application/pdf" \
-  --data-binary @${artifact_filepath} \
-  "$release_upload_url?name=`basename ${artifact_filepath}`"
+code=0
+for artifact_filepath in "$artifact_filepath_pdf" "$artifact_filepath_html"
+do
+  curl \
+    -X POST \
+    -H "Authorization: token $GITHUB_API_TOKEN" \
+    -H "Accept: application/vnd.github.v3+json" \
+    -H "Content-Type: application/pdf" \
+    --data-binary @${artifact_filepath} \
+    "$release_upload_url?name=`basename ${artifact_filepath}`"
+  if [ $? -ne 0 ]
+  then
+    code=1
+  fi
+done
+exit $code
 

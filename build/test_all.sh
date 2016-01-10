@@ -17,7 +17,7 @@ do
   echo -n "${md}: " >&2
   if [ -s "${md}" ]
   then
-    time_test=`(time $PANDOC -o "${md%.*}.pdf" "${md}" 2>&1) 2>&1 >"$tmpfile"`
+    time_test=`(time $PANDOC_PDF -o "${md%.*}.pdf" "${md}" 2>&1) 2>&1 >"$tmpfile"`
     pandoc_result=$?
     time_test=`echo $time_test | cut -d' ' -f2 | sed -e 's/^\(.*\)m\(.*\)s$/60*\1+\2/' | bc`
     total_elapsed=`echo "$total_elapsed + $time_test" | bc`
@@ -50,7 +50,7 @@ echo "<?xml version=\"1.0\" ?>
 <testsuites>
 <testsuite name=\"pandoc\" tests=\"${test_count}\" failures=\"${failure_count}\" time=\"${total_elapsed}\">
 ${result_collector}</testsuite>
-</testsuites>" >"${CIRCLE_TEST_REPORTS}/TestResults.xml"
+</testsuites>" >"${CIRCLE_TEST_REPORTS:-.}/TestResults.xml"
 
 rm "$tmpfile"
 
