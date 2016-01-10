@@ -47,19 +47,32 @@ then
 fi
 
 code=0
-for artifact_filepath in "$artifact_filepath_pdf" "$artifact_filepath_html"
-do
-  curl \
-    -X POST \
-    -H "Authorization: token $GITHUB_API_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    -H "Content-Type: application/pdf" \
-    --data-binary @${artifact_filepath} \
-    "$release_upload_url?name=`basename ${artifact_filepath}`"
-  if [ $? -ne 0 ]
-  then
-    code=1
-  fi
-done
+
+# PDF のデプロイ
+curl \
+  -X POST \
+  -H "Authorization: token $GITHUB_API_TOKEN" \
+  -H "Accept: application/vnd.github.v3+json" \
+  -H "Content-Type: application/pdf" \
+  --data-binary @${artifact_filepath_pdf} \
+  "$release_upload_url?name=`basename ${artifact_filepath_pdf}`"
+if [ $? -ne 0 ]
+then
+  code=1
+fi
+
+# HTML のデプロイ
+curl \
+  -X POST \
+  -H "Authorization: token $GITHUB_API_TOKEN" \
+  -H "Accept: application/vnd.github.v3+json" \
+  -H "Content-Type: text/html; charset=utf-8" \
+  --data-binary @${artifact_filepath_html} \
+  "$release_upload_url?name=`basename ${artifact_filepath_html}`"
+if [ $? -ne 0 ]
+then
+  code=1
+fi
+
 exit $code
 
