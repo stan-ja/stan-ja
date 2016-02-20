@@ -109,7 +109,7 @@ increment_log_prob(log_mix(lambda,
   \begin{cases}
     \theta+(1-\theta)\times\mathsf{Poisson}(0\mid\lamda) & y_{n}=0のとき \\
     (1-\theta)\times\mathsf{Poisson}(y_{n}\mid\lambda)   & y_{n} > 0のとき
-  \end{cases}$$](fig/fig08.tex)
+  \end{cases}$$](fig/fig08.png)
 
 
 ```
