@@ -105,11 +105,7 @@ increment_log_prob(log_mix(lambda,
 
 #### ゼロ過剰
 
-![$$  p(y_{n}\mid\theta,\lambda)=
-  \begin{cases}
-    \theta+(1-\theta)\times\mathsf{Poisson}(0\mid\lamda) & y_{n}=0のとき \\
-    (1-\theta)\times\mathsf{Poisson}(y_{n}\mid\lambda)   & y_{n} > 0のとき
-  \end{cases}$$](fig/fig08.png)
+![$$  p(y_{n}\mid\theta,\lambda)=\begin{cases}\theta+(1-\theta)\times\mathsf{Poisson}(0\mid\lamda) & y_{n}=0のとき \\(1-\theta)\times\mathsf{Poisson}(y_{n}\mid\lambda)   & y_{n} > 0のとき\end{cases}$$](fig/fig08.png)
 
 
 ```
@@ -138,11 +134,7 @@ model {
 #### ハードルモデル
 
 
-![$$  p(y_{n}\mid\theta,\lambda)=
-  \begin{cases}
-    \theta & y=0のとき \\
-    (1-\theta)\frac{\mathsf{Poisson}(y\mid\lambda)}{1-\mathsf{PoissonCDF}(0\mid|lambda)} & y > 0のとき
-  \end{cases}$$](fig/fig09.png)
+![$$  p(y_{n}\mid\theta,\lambda)=\begin{cases}\theta & y=0のとき \\(1-\theta)\frac{\mathsf{Poisson}(y\mid\lambda)}{1-\mathsf{PoissonCDF}(0\mid|lambda)} & y > 0のとき\end{cases}$$](fig/fig09.png)
 
 
 ```
