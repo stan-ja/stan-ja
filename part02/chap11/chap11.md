@@ -51,7 +51,7 @@ x ~ normal(mu_x, sigma_x);   // 事前分布
 ```
 
 
-![$$x_{n} \sim \mathsf{Normal}(\gamma^{\top}c,\upsilon)]](fig/fig01.png)
+![$$x_{n} \sim \mathsf{Normal}(\gamma^{\top}c,\upsilon)$$](fig/fig01.png)
 
 
 #### 丸め
