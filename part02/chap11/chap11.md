@@ -68,7 +68,7 @@ x ~ normal(mu_x, sigma_x);   // 事前分布
 ![$$p(\mu,\sigma^2) \propto \frac{1}{\sigma^2}$$](fig/fig04.png)
 
 
-![$$\begin{array}{ll}p(\mu,\sigma^2\mid y) &\propto p(\mu,\sigma^2)p(y\mid\mu,\sigma^2)\\ &\propto \frac{1}{\sigma^2}\prod_{n=1}^{5}\left(\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)\right) end{array}$$](fig/fig05.png)
+![$$\begin{array}{ll}p(\mu,\sigma^2\mid y) &\propto p(\mu,\sigma^2)p(y\mid\mu,\sigma^2)\\ &\propto \frac{1}{\sigma^2}\prod_{n=1}^{5}\left(\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)\right) \end{array}$$](fig/fig05.png)
 
 ```
 data {
