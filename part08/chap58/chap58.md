@@ -56,6 +56,7 @@ HMCでは補助運動量変数ρが導入され、結合密度
 ![$$ \dot{\theta},\dot{\rho} $$](8.PNG)
 
 となります。
+
 ####蛙飛び積分(Leapfrog Integrator)
 このセクションの最後に2状態の微分方程式を解く作業が残されています。
 Stanは他のほとんどのHMCの実装と同様に蛙飛び積分(Leapfrog Integrator)を使っています。
