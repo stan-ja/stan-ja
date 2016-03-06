@@ -122,7 +122,7 @@ model {
 
 ![$$\Pr[y>U]=\int_{U}^{\infty}\mathsf{Normal}(y \mid \mu, \sigma)dy = 1 - \Phi\left(\frac{y - \mu}{\sigma}\right)$$](fig/fig01.png)
 
-ここで、$\Phi()$は標準正規分布の累積分布関数です。$M$個の打ち切り観測があるとき、合計の確率は対数スケールで以下のようになります。
+ここで、$\Phi()$は標準正規分布の累積分布関数です。$M$個の打ち切り観測があるとき、合計の確率は対数軸で以下のようになります。
 
 ![$$\log\prod_{m=1}^{M}\Pr[y_{m}>U] = \log\left(1 - \Phi\left(\frac{y - \mu}{\sigma}\right)\right)^{M} = M \mathsf{normal\_ccdf\_log}(y, \mu, \sigma)$$](fig/fig02.png)
 
