@@ -70,9 +70,7 @@ Stanは他のほとんどのHMCの実装と同様に蛙飛び積分(Leapfrog Int
 
 から始め、ステップの半分だけの運動量の更新と1ステップ分の位置の更新を交互に行います。
 
-![$$  \rho \leftarrow \rho -\frac{\epsilon}{2}{\partial V}{\partial \theta} \\
-      \theta \leftarrow  \theta + \epsilon \Sigma \rho \\
-      \rho  \leftarrow -\frac{\epsilon}{2}{\partial V}{\partial \theta} $$](10.PNG)
+![$$  \rho \leftarrow \rho -\frac{\epsilon}{2}{\partial V}{\partial \theta} \\      \theta \leftarrow  \theta + \epsilon \Sigma \rho \\      \rho  \leftarrow -\frac{\epsilon}{2}{\partial V}{\partial \theta} $$](10.PNG)
 
 L回の蛙飛びステップで$L\epsilon$だけの時間の動きがシミュレートされます。この結果(上記の3つのステップのL回繰り返し)で得られる状態を$(\rho*,\theta*)$と書きます。
 
