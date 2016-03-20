@@ -39,11 +39,13 @@ Stanにおける再現性とそのインターフェースについての完全�
 
 言うまでもないことですが、やみくもにデータをフィットだけさせようとしないでください。実際に手元にあるデータの性質を理解するために、よく見てください。もしロジスティック回帰をしているなら、それは分離可能ですか？もしマルチレベルモデリングをしているなら、そもそもの結果はレベルごとに変化していますか？もし線形回帰をしているなら、xとyの散布図を書いてそんなモデルが意味があるかどうか見てみましょう。
 
-2.5. Design Top-Down, Code Bottom-Up
-Software projects are almost always designed top-down from one or more intended use cases. Good software coding, on the other hand, is typically done bottom-up.
-The motivation for top-down design is obvious. The motivation for bottom-up development is that it is much easier to develop software using components that have been thoroughly tested. Although Stan has no built-in support for either modularity or testing, many of the same principles apply.
-The way the developers of Stan themselves build models is to start as simply as possibly, then build up. This is true even if we have a complicated model in mind as the end goal, and even if we have a very good idea of the model we eventually want to fit. Rather than building a hierarchical model with multiple interactions, covariance priors, or other complicated structure, start simple. Build just a simple regression with fixed (and fairly tight) priors. Then add interactions or additional levels. One at a time. Make sure that these do the right thing. Then expand.
+Build just a simple regression with fixed (and fairly tight) priors. Then add interactions or additional levels. One at a time. Make sure that these do the right thing. Then expand.
 
+### 2.5. トップダウンでデザインし、ボトムアップでコーディングする
+
+ソフトウェアのプロジェクトはだいたいいつも一つかそれ以上の意図的なユースケースからトップダウンでデザインされます。一方、良いソフトウェアのコーディングは典型的にはボトムアップで行われます。
+トップダウンデザインの動機は明白です。ボトムアップ開発の動機は、すでにすっかりテスト済みのコンポーネントを使って開発するほうがはるかに容易だということです。Stanはモジュール対応もテストへの対応も組み込まれていませんが、同じ原理の多くがあてはまります。
+Stanの開発者自身がモデルを構築するやり方は、できるだけ単純にスタートし、そこから組み立てていきます。これは最終的に複雑なモデルを想定しているときであっても、また最終的にフィットさせたいモデルの良いアイディアを持っている場合であっても同様です。複数の交互作用、事前共分散、またはその他の複雑な構造の階層的モデルを構築するよりも、単純にスタートしましょう。固定の（そしてややタイトな）事前分布の単純な回帰モデルを構築しましょう。それから交互作用やレベルの追加をおこないます。1度にひとつずつ。正しくなっていることを確認しましょう。それから拡張です。
 
 
 2.6. Fit Simulated Data
