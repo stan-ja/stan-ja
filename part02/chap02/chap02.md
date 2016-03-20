@@ -52,6 +52,11 @@ Stanの開発者自身がモデルを構築するやり方は、できるだけ�
 One of the best ways to make sure your model is doing the right thing computationally is to generate simulated (i.e., “fake”) data with known parameter values, then see if the model can recover these parameters from the data. If not, there is very little hope that it will do the right thing with data from the wild.
 There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.
 
+### 2.6. シミュレートされたデータでフィットさせる
+
+あなたのモデルが計算上正しいことを確認するための最善の方法のひとつは、シミュレートされた（つまり偽りの）データを既知のパラメータで作成し、それからモデルがこのパラメータをデータから再生することができるかどうかを確認することです。もしだめであれば、生のデータで正しい結果を得る希望はほとんど持てないでしょう。
+*There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.*
+周辺統計でのカイ2乗検定、またはインターバルテストを含んでいるクックら(2006)の枠組みに従うといったときにこれをおこなうもっと洒落た方法がある。 →ここの意味がわからない
 
 
 2.7. Debug by Print
