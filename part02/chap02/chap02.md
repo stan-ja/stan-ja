@@ -34,3 +34,87 @@ Stanにおける再現性とそのインターフェースについての完全�
 誰か他の人に助けを得るためにデバッグやデザインの問題について十分に説明しようとする時に、その問題の解決策が出てくることは驚くべきほどたくさんあります。これはメーリングリスト上でも起こりえます。人to人の時に最もそうなります。あなた自身の問題を誰かに説明する時に解決策を見つけることはソフトウェア開発において非常に多いので、聞いている人は「ゴムのアヒル」と呼ばれています。なぜなら聞いている人は話に合わせてうんうんと相づちを打つだけだからです(注3)。
 
 (注3) 実際のゴムのアヒルではうまくいかないことが研究によって示されています。何らかの理由でゴムのアヒルは実際に説明を理解できなければならないのです。
+
+### 2.4. データを探検する
+
+言うまでもないことですが、やみくもにデータをフィットだけさせようとしないでください。実際に手元にあるデータの性質を理解するために、よく見てください。もしロジスティック回帰をしているなら、それは分離可能ですか？もしマルチレベルモデリングをしているなら、そもそもの結果はレベルごとに変化していますか？もし線形回帰をしているなら、xとyの散布図を書いてそんなモデルが意味があるかどうか見てみましょう。
+
+2.5. Design Top-Down, Code Bottom-Up
+Software projects are almost always designed top-down from one or more intended use cases. Good software coding, on the other hand, is typically done bottom-up.
+The motivation for top-down design is obvious. The motivation for bottom-up development is that it is much easier to develop software using components that have been thoroughly tested. Although Stan has no built-in support for either modularity or testing, many of the same principles apply.
+The way the developers of Stan themselves build models is to start as simply as possibly, then build up. This is true even if we have a complicated model in mind as the end goal, and even if we have a very good idea of the model we eventually want to fit. Rather than building a hierarchical model with multiple interactions, covariance priors, or other complicated structure, start simple. Build just a simple regression with fixed (and fairly tight) priors. Then add interactions or additional levels. One at a time. Make sure that these do the right thing. Then expand.
+
+
+
+2.6. Fit Simulated Data
+One of the best ways to make sure your model is doing the right thing computationally is to generate simulated (i.e., “fake”) data with known parameter values, then see if the model can recover these parameters from the data. If not, there is very little hope that it will do the right thing with data from the wild.
+There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.
+
+
+
+2.7. Debug by Print
+Although Stan does not have a stepwise debugger or any unit testing framework in place, it does support the time-honored tradition of debug-by-printf. 4
+Stan supports print statements with one or more string or expression arguments. Because Stan is an imperative language, variables can have different values at different points in the execution of a program. Print statements can be invaluable for debugging, especially for a language like Stan with no stepwise debugger.
+For instance, to print the value of variables y and z, use the following statement. print("y=", y, " z=", z);
+This print statement prints the string “y=” followed by the value of y, followed by the string “ z=” (with the leading space), followed by the value of the variable z.
+Each print statement is followed by a new line. The specific ASCII character(s) generated to create a new line are platform specific.
+Arbitrary expressions can be used. For example, the statement
+    print("1+1=", 1+1);
+will print “1 + 1 = 2” followed by a new line.
+Print statements may be used anywhere other statements may be used, but their
+behavior in terms of frequency depends on how often the block they are in is eval- uated. See Section 26.8 for more information on the syntax and evaluation of print statements.
+
+
+
+2.8. Comments 
+*Code Never Lies*
+The machine does what the code says, not what the documentation says. Documentation, on the other hand, might not match the code. Code documentation easily rots as the code evolves if the documentation is not well maintained.
+Thus it is always preferable to write readable code as opposed to documenting un- readable code. Every time you write a piece of documentation, ask yourself if there’s a way to write the code in such a way as to make the documentation unnecessary.
+
+*Comment Styles in Stan*
+Stan supports C++-style comments; see Section 28.1 for full details. The recommended style is to use line-based comments for short comments on the code or to comment out one or more lines of code. Bracketed comments are then reserved for long documentation comments. The reason for this convention is that bracketed comments cannot be wrapped inside of bracketed comments.
+
+4 The “f” is not a typo — it’s a historical artifact of the name of the printf function used for formatted printing in C.
+
+
+*What Not to Comment*
+When commenting code, it is usually safe to assume that you are writing the comments for other programmers who understand the basics of the programming lan- guage in use. In other words, don’t comment the obvious. For instance, there is no need to have comments such as the following, which add nothing to the code.
+```
+    y ~ normal(0,1);  // y has a unit normal distribution
+```
+A Jacobian adjustment for a hand-coded transform might be worth commenting, as in the following example.
+```
+    exp(y) ~ normal(0,1);
+    // adjust for change of vars: y = log | d/dy exp(y) |
+    increment_log_prob(y);
+```
+It’s an art form to empathize with a future code reader and decide what they will or won’t know (or remember) about statistics and Stan.
+
+*What to Comment*
+It can help to document variable declarations if variables are given generic names like N, mu, and sigma. For example, some data variable declarations in an item-response model might be usefully commented as follows.
+```
+    int<lower=1> N;  // number of observations
+    int<lower=1> I;  // number of students
+    int<lower=1> J;  // number of test questions
+```
+The alternative is to use longer names that do not require comments.
+```
+    int<lower=1> n_obs;
+    int<lower=1> n_students;
+    int<lower=1> n_questions;
+```
+Both styles are reasonable and which one to adopt is mostly a matter of taste (mostly because sometimes models come with their own naming conventions which should be followed so as not to confuse readers of the code familiar with the statistical conventions).
+Some code authors like big blocks of comments at the top explaining the purpose of the model, who wrote it, copyright and licensing information, and so on. The following bracketed comment is an example of a conventional style for large comment blocks.
+
+```
+    /*
+    * Item-Response Theory PL3 Model
+     * -----------------------------------------------------
+     * Copyright: Joe Schmoe  <joe@schmoe.com>
+     * Date:  19 September 2012
+     * License: GPLv3
+     */
+    data { // ...
+```
+
+The use of leading asterisks helps readers understand the scope of the comment. The problem with including dates or other volatile information in comments is that they can easily get out of synch with the reality of the code. A misleading comment or one that is wrong is worse than no comment at all!
