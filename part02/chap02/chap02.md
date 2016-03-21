@@ -58,18 +58,20 @@ There are fancier ways to do this, where you can do things like run χ2 tests on
 *There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.*
 周辺統計でのカイ2乗検定、またはインターバルテストを含んでいるクックら(2006)の枠組みに従うといったときにこれをおこなうもっと洒落た方法がある。 →ここの意味がわからない
 
+### 2.7. 印字することでデバッグする
 
-2.7. Debug by Print
-Although Stan does not have a stepwise debugger or any unit testing framework in place, it does support the time-honored tradition of debug-by-printf. 4
-Stan supports print statements with one or more string or expression arguments. Because Stan is an imperative language, variables can have different values at different points in the execution of a program. Print statements can be invaluable for debugging, especially for a language like Stan with no stepwise debugger.
-For instance, to print the value of variables y and z, use the following statement. print("y=", y, " z=", z);
-This print statement prints the string “y=” followed by the value of y, followed by the string “ z=” (with the leading space), followed by the value of the variable z.
-Each print statement is followed by a new line. The specific ASCII character(s) generated to create a new line are platform specific.
-Arbitrary expressions can be used. For example, the statement
-    print("1+1=", 1+1);
-will print “1 + 1 = 2” followed by a new line.
-Print statements may be used anywhere other statements may be used, but their
-behavior in terms of frequency depends on how often the block they are in is eval- uated. See Section 26.8 for more information on the syntax and evaluation of print statements.
+Stanにはステップごとのデバッガも単体テストのフレームワークもついていませんが、昔ながらのprintfでのデバッグはサポートしています。 [^4]
+Stanは1つまたはそれ以上の文字列もしくは式を引数として持つprint文をサポートしています。Stanは命令型の言語なので、変数はプログラムの実行中の異なる場所で異なる値を持つことができます。Print文はStanのようなステップごとのデバッガを持たない言語には非常に価値があります。
+例えば、変数yとzの値を表示するときは以下のような文を使います。 `print("y=",y,"z=",z);`
+このPrint文は文字列`"y="`に続いて変数yの値、文字列`"z="`に続いて変数zの値を印字します。
+それぞれのPrint文の最後には改行がつきます。改行のための具体的なアスキー文字はプラットフォーム依存です。
+任意の式表現を使うことができます。例えば、
+```
+    print("1+1=",1+1);
+```
+という文は`"1+1=2"`に続けて改行を印字します。
+Print文は他の命令を使うことができる場所ならどこでも使うことができますが、頻度についての挙動は記述されているブロックがどのくらいの回数評価されるかに依存します。Print文の文法と評価について詳しくはセクション26.8を参照してください。
+
 
 
 
