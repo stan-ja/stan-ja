@@ -35,11 +35,11 @@ Stanにおける再現性とそのインターフェースについての完全�
 
 (注3) 実際のゴムのアヒルではうまくいかないことが研究によって示されています。何らかの理由でゴムのアヒルは実際に説明を理解できなければならないのです。
 
+
 ### 2.4. データを探検する
 
 言うまでもないことですが、やみくもにデータをフィットだけさせようとしないでください。実際に手元にあるデータの性質を理解するために、よく見てください。もしロジスティック回帰をしているなら、それは分離可能ですか？もしマルチレベルモデリングをしているなら、そもそもの結果はレベルごとに変化していますか？もし線形回帰をしているなら、xとyの散布図を書いてそんなモデルが意味があるかどうか見てみましょう。
 
-Build just a simple regression with fixed (and fairly tight) priors. Then add interactions or additional levels. One at a time. Make sure that these do the right thing. Then expand.
 
 ### 2.5. トップダウンでデザインし、ボトムアップでコーディングする
 
@@ -47,10 +47,6 @@ Build just a simple regression with fixed (and fairly tight) priors. Then add in
 トップダウンデザインの動機は明白です。ボトムアップ開発の動機は、すでにすっかりテスト済みのコンポーネントを使って開発するほうがはるかに容易だということです。Stanはモジュール対応もテストへの対応も組み込まれていませんが、同じ原理の多くがあてはまります。
 Stanの開発者自身がモデルを構築するやり方は、できるだけ単純にスタートし、そこから組み立てていきます。これは最終的に複雑なモデルを想定しているときであっても、また最終的にフィットさせたいモデルの良いアイディアを持っている場合であっても同様です。複数の交互作用、事前共分散、またはその他の複雑な構造の階層的モデルを構築するよりも、単純にスタートしましょう。固定の（そしてややタイトな）事前分布の単純な回帰モデルを構築しましょう。それから交互作用やレベルの追加をおこないます。1度にひとつずつ。正しくなっていることを確認しましょう。それから拡張です。
 
-
-2.6. Fit Simulated Data
-One of the best ways to make sure your model is doing the right thing computationally is to generate simulated (i.e., “fake”) data with known parameter values, then see if the model can recover these parameters from the data. If not, there is very little hope that it will do the right thing with data from the wild.
-There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.
 
 ### 2.6. シミュレートされたデータでフィットさせる
 
@@ -60,7 +56,7 @@ There are fancier ways to do this, where you can do things like run χ2 tests on
 
 ### 2.7. 印字することでデバッグする
 
-Stanにはステップごとのデバッガも単体テストのフレームワークもついていませんが、昔ながらのprintfでのデバッグはサポートしています。 [^4]
+Stanにはステップごとのデバッガも単体テストのフレームワークもついていませんが、昔ながらのprintfでのデバッグはサポートしています(注4)。
 Stanは1つまたはそれ以上の文字列もしくは式を引数として持つprint文をサポートしています。Stanは命令型の言語なので、変数はプログラムの実行中の異なる場所で異なる値を持つことができます。Print文はStanのようなステップごとのデバッガを持たない言語には非常に価値があります。
 例えば、変数yとzの値を表示するときは以下のような文を使います。 `print("y=",y,"z=",z);`
 このPrint文は文字列`"y="`に続いて変数yの値、文字列`"z="`に続いて変数zの値を印字します。
@@ -72,18 +68,18 @@ Stanは1つまたはそれ以上の文字列もしくは式を引数として持
 という文は`"1+1=2"`に続けて改行を印字します。
 Print文は他の命令を使うことができる場所ならどこでも使うことができますが、頻度についての挙動は記述されているブロックがどのくらいの回数評価されるかに依存します。Print文の文法と評価について詳しくはセクション26.8を参照してください。
 
+(注4) 「f」がついているのは誤字ではありません。これはC言語で書式付き印字をするときに使われるprintf関数の名前にちなんだ歴史的な産物です。
 
+ 
+### 2.8. コメント
 
+*コードは嘘をつかない*
 
-2.8. Comments 
-*Code Never Lies*
-The machine does what the code says, not what the documentation says. Documentation, on the other hand, might not match the code. Code documentation easily rots as the code evolves if the documentation is not well maintained.
-Thus it is always preferable to write readable code as opposed to documenting un- readable code. Every time you write a piece of documentation, ask yourself if there’s a way to write the code in such a way as to make the documentation unnecessary.
+機械はドキュメントに書かれたことではなくコードに書かれたことを実行します。ドキュメントは一方、必ずしもコードと一致しません。ドキュメントがきちんとメンテナンスされていない場合、コードの進化にともなってコードのドキュメントは容易に腐ってしまいます。
+したがって、読めないコードのドキュメントを書くのに対して、読めるコードを書くほうが常に好ましいです。ドキュメントを書くときにはいつも、コードをそんな風にかく方法がないか自問して、ドキュメントが不必要になるようにしましょう。
 
 *Comment Styles in Stan*
 Stan supports C++-style comments; see Section 28.1 for full details. The recommended style is to use line-based comments for short comments on the code or to comment out one or more lines of code. Bracketed comments are then reserved for long documentation comments. The reason for this convention is that bracketed comments cannot be wrapped inside of bracketed comments.
-
-4 The “f” is not a typo — it’s a historical artifact of the name of the printf function used for formatted printing in C.
 
 
 *What Not to Comment*
