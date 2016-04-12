@@ -78,8 +78,10 @@ Print文は他の命令を使うことができる場所ならどこでも使う
 機械はドキュメントに書かれたことではなくコードに書かれたことを実行します。ドキュメントは一方、必ずしもコードと一致しません。ドキュメントがきちんとメンテナンスされていない場合、コードの進化にともなってコードのドキュメントは容易に腐ってしまいます。
 したがって、読めないコードのドキュメントを書くのに対して、読めるコードを書くほうが常に好ましいです。ドキュメントを書くときにはいつも、コードをそんな風にかく方法がないか自問して、ドキュメントが不必要になるようにしましょう。
 
-*Comment Styles in Stan*
-Stan supports C++-style comments; see Section 28.1 for full details. The recommended style is to use line-based comments for short comments on the code or to comment out one or more lines of code. Bracketed comments are then reserved for long documentation comments. The reason for this convention is that bracketed comments cannot be wrapped inside of bracketed comments.
+*Stanのコメントスタイル*
+
+StanはC++スタイルのコメントをサポートしています。詳しくはセクション28.1をごらんください。お勧めのスタイルはコード内の短いコメントや1行もしくはそれ以上の行をコメントアウトするときにはラインコメントにすることです。
+ブロックコメントは長いドキュメンテーションコメント用にとっておきます。このしきたりの理由は、ブロックコメントはブロックコメントの中に作ることができないからです。
 
 
 *What Not to Comment*
