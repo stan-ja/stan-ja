@@ -6,6 +6,8 @@ Stanで統計モデルの開発を行うということはStanプログラムを
 ### 2.1. バージョン管理を使う
 バージョン管理のソフト（SubversionやGitなど）はコーディングしはじめる前に使えるように用意しておくべきです(注1)。バージョン管理を学ぶことは労力の大きな投資に見えるかもしれません。しかし、その価値はあります。一つのコマンドで前に作業していたバージョンに戻ることができたり、今のバージョンと古いバージョンの差を得ることができます。あなたが他の人と作業を共有する必要がある時にはもっとよいものになります。**`{on a paper}`**。作業は独立に行われ、自動的にマージされるでしょう。Stan自体がどのように開発されているかについては62章を見てください。
 
+**`even on a paper の部分の翻訳がわかりません　`**
+
 (注1) StanはSubversion (SVN)を使ってはじまりましたが、もっと色々なことができるGitに移行しました。GitはSVNができることは全部できるし、もっと色々なことができます。対価としてはSVNより学習曲線が急なことが挙げられます。個人用、もしくはとても小さいチームでの開発ならSVNでいいです。
 
 ### 2.2 再現可能にする
@@ -51,14 +53,21 @@ Stanの開発者自身がモデルを構築するやり方は、できるだけ�
 ### 2.6. シミュレートされたデータでフィットさせる
 
 あなたのモデルが計算上正しいことを確認するための最善の方法のひとつは、シミュレートされた（つまり偽りの）データを既知のパラメータで作成し、それからモデルがこのパラメータをデータから再生することができるかどうかを確認することです。もしだめであれば、生のデータで正しい結果を得る希望はほとんど持てないでしょう。
+
 *There are fancier ways to do this, where you can do things like run χ2 tests on marginal statistics or follow the paradigm introduced in (Cook et al., 2006), which involves interval tests.*
-周辺統計でのカイ2乗検定、またはインターバルテストを含んでいるクックら(2006)の枠組みに従うといったときにこれをおこなうもっと洒落た方法がある。 →ここの意味がわからない
+
+周辺統計でのカイ2乗検定、またはインターバルテストを含んでいるクックら(2006)の枠組みに従うといったときにこれをおこなう、もっと洒落た方法があります。 
+**`ここの意味がわからないまま訳しています　`**
+
 
 ### 2.7. 印字することでデバッグする
 
 Stanにはステップごとのデバッガも単体テストのフレームワークもついていませんが、昔ながらのprintfでのデバッグはサポートしています(注4)。
 Stanは1つまたはそれ以上の文字列もしくは式を引数として持つprint文をサポートしています。Stanは命令型の言語なので、変数はプログラムの実行中の異なる場所で異なる値を持つことができます。Print文はStanのようなステップごとのデバッガを持たない言語には非常に価値があります。
-例えば、変数yとzの値を表示するときは以下のような文を使います。 `print("y=",y,"z=",z);`
+例えば、変数yとzの値を表示するときは以下のような文を使います。 
+```
+print("y=",y,"z=",z);
+```
 このPrint文は文字列`"y="`に続いて変数yの値、文字列`"z="`に続いて変数zの値を印字します。
 それぞれのPrint文の最後には改行がつきます。改行のための具体的なアスキー文字はプラットフォーム依存です。
 任意の式表現を使うことができます。例えば、
@@ -68,7 +77,7 @@ Stanは1つまたはそれ以上の文字列もしくは式を引数として持
 という文は`"1+1=2"`に続けて改行を印字します。
 Print文は他の命令を使うことができる場所ならどこでも使うことができますが、頻度についての挙動は記述されているブロックがどのくらいの回数評価されるかに依存します。Print文の文法と評価について詳しくはセクション26.8を参照してください。
 
-(注4) 「f」がついているのは誤字ではありません。これはC言語で書式付き印字をするときに使われるprintf関数の名前にちなんだ歴史的な産物です。
+(注4) 「f」がついているのはタイプミスではありません。これはC言語で書式付き印字をするときに使われるprintf関数の名前にちなんだ歴史的な産物です。
 
  
 ### 2.8. コメント
@@ -83,36 +92,38 @@ Print文は他の命令を使うことができる場所ならどこでも使う
 StanはC++スタイルのコメントをサポートしています。詳しくはセクション28.1をごらんください。お勧めのスタイルはコード内の短いコメントや1行もしくはそれ以上の行をコメントアウトするときにはラインコメントにすることです。
 ブロックコメントは長いドキュメンテーションコメント用にとっておきます。このしきたりの理由は、ブロックコメントはブロックコメントの中に作ることができないからです。
 
+*コメントすべきでないこと*
 
-*What Not to Comment*
-When commenting code, it is usually safe to assume that you are writing the comments for other programmers who understand the basics of the programming lan- guage in use. In other words, don’t comment the obvious. For instance, there is no need to have comments such as the following, which add nothing to the code.
+コードにコメントをつける際、使用中のプログラミング言語の基本を理解している他のプログラマのためにコメントを書いていると想定するのが通常は安全です。別の言葉で言えば、明白なことはコメントしてはいけません。例えば、以下のようなコードに何も追加しないコメントを書く必要はありません。
 ```
-    y ~ normal(0,1);  // y has a unit normal distribution
+    y ~ normal(0,1);  // yは標準正規分布に従う
 ```
-A Jacobian adjustment for a hand-coded transform might be worth commenting, as in the following example.
+以下の例のような *Jacobian adjustment for a hand-coded transform* であればコメントする価値があるかもしれません。 
 ```
     exp(y) ~ normal(0,1);
     // adjust for change of vars: y = log | d/dy exp(y) |
     increment_log_prob(y);
 ```
-It’s an art form to empathize with a future code reader and decide what they will or won’t know (or remember) about statistics and Stan.
+**`Jacobian adjustmentの意味がわからず、英語のまま残した部分とコメントの訳ができません`**
 
-*What to Comment*
-It can help to document variable declarations if variables are given generic names like N, mu, and sigma. For example, some data variable declarations in an item-response model might be usefully commented as follows.
+将来このコードを読む人に共感し、その人達が何を知り何を知らないか（または覚えていないか）を決定する芸術の形です。
+
+*コメントすべきこと*
+`N`や`mu`、`sigma`といった一般的な変数名をつけているときには変数宣言にコメントをつけることが助けになるでしょう。例えば、項目反応モデルにおけるいくつかのデータ変数宣言は以下のように有用なコメントをつけるとよいでしょう。
+
 ```
-    int<lower=1> N;  // number of observations
-    int<lower=1> I;  // number of students
-    int<lower=1> J;  // number of test questions
+    int<lower=1> N;  // オブザベーション数
+    int<lower=1> I;  // 生徒数
+    int<lower=1> J;  // テストの問題数
 ```
-The alternative is to use longer names that do not require comments.
+別の方法は、コメントが不要な長い変数名にすることです。
 ```
     int<lower=1> n_obs;
     int<lower=1> n_students;
     int<lower=1> n_questions;
 ```
-Both styles are reasonable and which one to adopt is mostly a matter of taste (mostly because sometimes models come with their own naming conventions which should be followed so as not to confuse readers of the code familiar with the statistical conventions).
-Some code authors like big blocks of comments at the top explaining the purpose of the model, who wrote it, copyright and licensing information, and so on. The following bracketed comment is an example of a conventional style for large comment blocks.
-
+どちらのスタイルも合理的で、どちらを採用するかは主として好みの問題です（統計的な慣習を持つコードの読者を混乱させないように、時にモデル独自の命名の慣習をフォローする必要があるというのが主な理由です）。
+一部のコード作者は冒頭に大きなコメントブロックを置いてモデルの目的、誰が書いたか、著作権とライセンスの情報などなどを説明することを好みます。以下の複数行コメントは大きなコメントブロックの従来の書き方の例です。
 ```
     /*
     * Item-Response Theory PL3 Model
@@ -123,5 +134,4 @@ Some code authors like big blocks of comments at the top explaining the purpose 
      */
     data { // ...
 ```
-
-The use of leading asterisks helps readers understand the scope of the comment. The problem with including dates or other volatile information in comments is that they can easily get out of synch with the reality of the code. A misleading comment or one that is wrong is worse than no comment at all!
+アスタリスクで始まるコメントの書き方は読者がコメントの範囲を理解するのを助けます。一方コメントに日付やその他の変わりやすい情報を含めることの問題点は、その情報が、簡単にコードの実情と同期しなくなってしまうことです。誤解を招いたり間違っているコメントは、全くコメントがないよりも悪いのです！
