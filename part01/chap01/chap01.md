@@ -67,13 +67,12 @@ dataブロックとtransformed dataブロックにおいて，変数の制約は
 Stanの文は命令として解釈されるため，順序が重要です．単一の文は変数に対する値の割り付けで，そうした文の列（と必要に応じて局所変数の定義）によりブロックは構成されます．そしてStanもまたRやBUGSで使われていた有限なfor-eachのループを提供しています．
 
 ### 確率的プログラミング言語
-Stanは命令的で確率的なプログラミング言語です．ドメイン特化言語のインスタンスで，つまりは統計的志向という特定領域のために開発されました．
-確率変数が正真正銘の第一級オブジェクトであるという点で確率的プログラミング言語です．In Stan, variables may be treated as random, and among the random variables, some are observed and some are unknown and need to be estimated or used for posterior predictive inference. Observed random variables are declared as data and unobserved random variables are declared as parameters (including transformed parameters, generated quantities, and local variables depend- ing on them). For the unobserved random variables, it is possible to sample them
-22
-either marginally or jointly, estimate their means and variance, or plug them in for downstream posterior predictive inference.
-
-
-
+Stanは命令的で確率的なプログラミング言語です．DSLの一種で，統計的信念に基づく特定領域のために開発されました．
+「確率的」というのは確率変数を正真正銘の第一級オブジェクトとして扱うので，その意味で「確率的」プログラミング言語と呼ばれているのです．
+Stanでは，変数は全て確率変数として扱いますが，その確率変数たちが一部は観測されたものとして，また一部は推定分布を推定したいもの，あるいは事後分布の推論に使用されると考えます．
+観測された確率変数はdataブロックの中で宣言され，観測されていない変数はparametersブロックで宣言されます（もちろんtransformed parameters, generated quantities の値や，それに依存する局所変数も同様です）
+また，観測されていない変数たちは，周辺分布や結合分布の平均と分散を推定したり，もしくは他の階層の事後分布推論に接続することもできます．
+「命令的」と言うのは，StanがCやFortranなどと同様(C++や，R，Pythonもしくは Javaなども同じ)に，代入，ループ，条件分岐や局所変数，オブジェクトレベルの関数の適用や，並列のようなデータ構造に基づいているという意味です．
 
 
 
