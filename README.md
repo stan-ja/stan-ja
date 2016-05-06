@@ -112,6 +112,10 @@ pull requestページのcommit履歴の横にチェックマークまたはバ�
 その中にPDFへのリンクが表示されています。
 ビルドが失敗している場合はTest Resultsというタブの`$ build/build_chapter.sh`というブロックをクリックするとエラー詳細が表示されます。
 
+![PR](img/pr.png)
+
+![CircleCI](img/circleci.png)
+
 ## 参考サイト
 
 * [英語のコメントやissueで頻出する略語の意味](http://qiita.com/uasi/items/86c3a09d17792ab62dfe)
