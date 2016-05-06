@@ -7,3 +7,5 @@ Thumbs.db
 *.html
 *.xml
 
+# 例外
+!/stan-reference-2.9.0.pdf
