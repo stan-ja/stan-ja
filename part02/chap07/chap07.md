@@ -322,7 +322,7 @@ model {
 
 #### 識別可能性と定常性
 
-MA部分の固有多項式の解の平方根が単位円の中にあるなら、MAおよびARMAモデルは識別可能ではありません。その場合、以下の制約をつける必要があります。<sup>2</sup>
+MA部分の固有多項式の平方根が単位円の中にあるなら、MAおよびARMAモデルは識別可能ではありません。その場合、以下の制約をつける必要があります。<sup>2</sup>
 
 ```
 real<lower = -1, upper = 1> theta;
@@ -439,17 +439,17 @@ model { ...
 
 ```
 data {
-  int<lower=1> K;  // カテゴリー数
-  int<lower=1> V;  // 単語数
+  int<lower=1> K;  // カテゴリーの数
+  int<lower=1> V;  // 単語(word)の数
   int<lower=0> T;  // 時点の数
-  int<lower=1,upper=V> w[T]; // 単語
+  int<lower=1,upper=V> w[T]; // 単語(word)
   int<lower=1,upper=K> z[T]; // カテゴリー
-  vector<lower=0>[K] alpha;  // 推移確率の事前確率
-  vector<lower=0>[V] beta;   // 出力確率の事前確率
+  vector<lower=0>[K] alpha;  // 推移(transit)確率の事前確率
+  vector<lower=0>[V] beta;   // 単語vを出力(emit)する確率の事前確率
 }
 parameters {
-  simplex[K] theta[K];  // 推移確率
-  simplex[V] phi[K];    // 出力確率
+  simplex[K] theta[K];  // 推移(transit)確率
+  simplex[V] phi[K];    // 単語vを出力(emit)する確率
 }
 model {
   for (k in 1:K)
@@ -554,7 +554,7 @@ Stanでは、前向きアルゴリズムは以下のようにコーディング�
 data {
   ...
   int<lower=1> T_unsup;  // 教師なしアイテムの数
-  int<lower=1,upper=V> u[T_unsup]; // 教師なしワード
+  int<lower=1,upper=V> u[T_unsup]; // 教師なし単語(word)
   ...
 ```
 
