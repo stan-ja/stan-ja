@@ -220,7 +220,7 @@ James and Stein (1961)のように、係数の推定値を0ではない値に偏
 
 これにより次式が保証されます。
 
-![$$\mathrm{argmax}_{\theta}\ p(\theta\mid y) &= \mathrm{argmax}_{\theta}\ \frac{p(y\mid\theta)p(\theta)}{p(y)}\\ &= \mathrm{argmax}_{\theta}\ p(y\mid\theta)p(\theta)$$](fig/fig17.png)
+![$$\mathrm{argmax}_{\theta}\ p(\theta\mid y) &=& \mathrm{argmax}_{\theta}\ \frac{p(y\mid\theta)p(\theta)}{p(y)}\\ &=& \mathrm{argmax}_{\theta}\ p(y\mid\theta)p(\theta)$$](fig/fig17.png)
 
 密度は正値をとり、対数が厳密に単調であることから次式が保証されます。
 
