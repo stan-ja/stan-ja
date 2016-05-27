@@ -314,6 +314,6 @@ $\mu$の最尤推定量はちょうど標本平均、すなわち標本の平均
 
 推定量の$K \times K$共分散行列全体も、いつもどおり以下のように定義されます。
 
-![$$\mathrm{covar}_{p(y\mid\theta)}[\hat{\theta}] = \mathbb{E}_{p(y\mid\theta)}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])(\hat{\theta}-\mathbb{E}[\hat{\theta}]^{\top}]$](fig/fig30.png)
+![$$\mathrm{covar}_{p(y\mid\theta)}[\hat{\theta}] = \mathbb{E}_{p(y\mid\theta)}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])(\hat{\theta}-\mathbb{E}[\hat{\theta}]^{\top}]$$](fig/fig30.png)
 
 標本データから正規分布の平均と分散を推定する例での計算では、最尤推定量（すなわち標本平均）は、分散を最小とするような平均$\mu$の不偏推定量です。正規ノイズの仮定のもとで、最小二乗推定について、また等価ですが、最尤推定について、ガウス-マルコフの定理が一定の（**some**）一般性をもってこの結果を証明しました。（**この文は難しい**）Hastieら(2009)の3.2.2節を参照してください。
