@@ -266,15 +266,11 @@ James and Stein (1961)のように、係数の推定値を0ではない値に偏
 
 特定の真のパラメータの値を$\theta$、尤度関数を$p(y \mid \theta)$とすると、推定量のバイアスとは推定誤差の期待値です。
 
-![$$\mathbb{E}{p(y\mid\theta)}[\hat{\theta}-\theta] = \mathbb{E}{p(y\mid\theta)}[\hat{\theta}] - \theta$$](fig/fig21a.png)
+![$$\mathbb{E}_{p(y\mid\theta)}[\hat{\theta}-\theta] = \mathbb{E}_{p(y\mid\theta)}[\hat{\theta}] - \theta$$](fig/fig22.png)
 
 ここで$\mathbb{E}_{p(y\mid\theta)}[\hat{\theta}]$は以下のように、推定値$\hat{\theta}$を尤度関数$p(y \mid \theta)$で重みづけてデータセット$y$の取りうる範囲全体について積分したものです。
 
 ![$$\mathbb{E}_{p(y\mid\theta)}[\hat{\theta}] = \int \left(\mathrm{argmax}_{\theta'}p(y\mid\theta')\right)p(y\mid\theta)dy$$](fig/fig21.png)
-
-推定量のバイアスとは、推定誤差の期待値です。
-
-![$$\mathbb{E}_{p(y\mid\theta)}[\hat{\theta}-\theta] = \mathbb{E}_{p(y\mid\theta)}[\hat{\theta}] - \theta$$](fig/fig22.png)
 
 バイアスは$\theta$と同じ次元の多変量です。この期待推定誤差が0であれば推定量は不偏ですが、そうでなければバイアスがあります。
 
@@ -318,6 +314,6 @@ $\mu$の最尤推定量はちょうど標本平均、すなわち標本の平均
 
 推定量の$K \times K$共分散行列全体も、いつもどおり以下のように定義されます。
 
-![$$\mathrm{covar}_{p(y\mid\theta)}[\hat{\theta}] = \mathbb{E}_{p(y\mid\theta)}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])(\hat{\theta}-\mathbb{E}[\hat{\theta}]^{\top}]$$](fig/fig30.png)
+![$$\mathrm{covar}_{p(y\mid\theta)}[\hat{\theta}] = \mathbb{E}_{p(y\mid\theta)}[(\hat{\theta} - \mathbb{E}[\hat{\theta}])(\hat{\theta}-\mathbb{E}[\hat{\theta}])^{\top}]$$](fig/fig30.png)
 
-標本データから正規分布の平均と分散を推定する例での計算では、最尤推定量（すなわち標本平均）は、分散を最小とするような平均$\mu$の不偏推定量です。そのことは、正規ノイズの仮定のもとで最小二乗推定について、また等価ですが、最尤推定について、ガウス-マルコフの定理によって一定の一般性をもって証明されました。（**この文は難しい**）Hastieら(2009)の3.2.2節を参照してください。
+標本データから正規分布の平均と分散を推定する例での計算では、最尤推定量（すなわち標本平均）は、分散を最小とするような平均$\mu$の不偏推定量です。そのことは、正規ノイズの仮定のもとで最小二乗推定について、また等価ですが、最尤推定について、ガウス-マルコフの定理によって一定の一般性をもって証明されました。Hastieら(2009)の3.2.2節を参照してください。
