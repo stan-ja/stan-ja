@@ -52,47 +52,16 @@ functions {
 #### 関数のための型の宣言
 関数の引数と返値の型の宣言に、変数のサイズは書きません。また、値の制約も含みません。図19.1に一覧にしましたので見てください。
 
-+---------------+-----------------+-----------------------------------+<br>
-| 関数:\        | ローカル変数:\  | ローカル変数ではない変数:\        |<br>
-| 次元なし      | 制約なし        | 制約あり                          |<br>
-+===============+=================+===================================+<br>
-| `int`         | `int`           | `int<lower=L>`\                   |<br>
-|               |                 | `int<upper=U>`\                   |<br>
-|               |                 | `int<lower=L,upper=U>`            |<br>
-+---------------+-----------------+-----------------------------------+<br>
-| `real`        | `real`          | `real<lower=L>`\                  |<br>
-|               |                 | `real<upper=U>`\                  |<br>
-|               |                 | `real<lower=L,upper=U>`           |<br>
-+---------------+-----------------+-----------------------------------+<br>
-| `vector`      | `vector[N]`     | `vector<lower=L>[N]`\             |<br>
-|               |                 | `vector<upper=U>[N]`\             |<br>
-|               |                 | `vector<lower=L,upper=U>[N]`\     |<br>
-|               |                 | `simplex[N]`\                     |<br>
-|               |                 | `ordered[N]`\                     |<br>
-|               |                 | `positive_ordered[N]`\            |<br>
-|               |                 | `unit_vector[N]`                  |<br>
-+---------------+-----------------+-----------------------------------+<br>
-| `row_vector`  | `row_vector[M]` | `row_vector<lower=L>[M]`\         |<br>
-|               |                 | `row_vector<upper=U>[M]`\         |<br>
-|               |                 | `row_vector<lower=L,upper=U>[M]`  |<br>
-+---------------+-----------------+-----------------------------------+<br>
-| `matrix`      | `matrix[M,N]`   | `matrix<lower=L>[M, N]`\          |<br>
-|               |                 | `matrix<upper=U>[M, N]`\          |<br>
-|               |                 | `matrix<lower=L,upper=U>[M, N]`\  |<br>
-|               |                 | `cov_matrix[K]`\                  |<br>
-|               |                 | `corr_matrix[K]`\                 |<br>
-|               |                 | `cholesky_factor_cov[K]`\         |<br>
-|               |                 | `cholesky_factor_corr[K]`         |<br>
-+---------------+-----------------+-----------------------------------+<br>
+![型の宣言](fig/fig1.png)
 
 <!--
-関数:<br>次元なし |  ローカル変数:<br>制約なし | ローカル変数ではない変数:<br>制約あり
----------------- | ------------ | --------
-`int` | `int` | `int<lower=L>`<br>`int<upper=U>`<br>`int<lower=L,upper=U>`
-`real` | `real` | `real<lower=L>`<br>`real<upper=U>`<br>`real<lower=L,upper=U>`
-`vector` | `vector[N]` | `vector<lower=L>[N]`<br>`vector<upper=U>[N]`<br>`vector<lower=L,upper=U>[N]`<br><br>`simplex[N]`<br>`ordered[N]`<br>`positive_ordered[N]`<br>`unit_vector[N]`
-`row_vector` | `row_vector[M]` | `row_vector<lower=L>[M]`<br>`row_vector<upper=U>[M]`<br>`row_vector<lower=L,upper=U>[M]`
-`matrix` | `matrix[M,N]` | `matrix<lower=L>[M, N]`<br>`matrix<upper=U>[M, N]`<br>`matrix<lower=L,upper=U>[M, N]`<br><br>`cov_matrix[K]`<br>`corr_matrix[K]`<br>`cholesky_factor_cov[K]`<br>`cholesky_factor_corr[K]`<br>
+| 関数:<br>次元なし |  ローカル変数:<br>制約なし | ローカル変数ではない変数:<br>制約あり |
+| ---------------- | ------------ | -------- |
+| `int` | `int` | `int<lower=L>`<br>`int<upper=U>`<br>`int<lower=L,upper=U>` |
+| `real` | `real` | `real<lower=L>`<br>`real<upper=U>`<br>`real<lower=L,upper=U>` |
+| `vector` | `vector[N]` | `vector<lower=L>[N]`<br>`vector<upper=U>[N]`<br>`vector<lower=L,upper=U>[N]`<br><br>`simplex[N]`<br>`ordered[N]`<br>`positive_ordered[N]`<br>`unit_vector[N]` |
+| `row_vector` | `row_vector[M]` | `row_vector<lower=L>[M]`<br>`row_vector<upper=U>[M]`<br>`row_vector<lower=L,upper=U>[M]` |
+| `matrix` | `matrix[M,N]` | `matrix<lower=L>[M, N]`<br>`matrix<upper=U>[M, N]`<br>`matrix<lower=L,upper=U>[M, N]`<br><br>`cov_matrix[K]`<br>`corr_matrix[K]`<br>`cholesky_factor_cov[K]`<br>`cholesky_factor_corr[K]` |
 -->
 
 図19.1: 一番左の列は制約のない、次元のない基本の型です。これらは関数の返値の型や引数の型に使われます。中央の列は次元つきの制約のない型です。これらはローカル変数として使われます。一番右の列は左と中央の列に対応する制約のある型です。右側のどの型の式でも、それに対応する左側の型に代入できます。実行時にすべての変数について次元が一貫しているかチェックされます。そして、どんなサイズのコンテナも関数の引数に代入できます。制約のある`matrix`型である`cov_matrix[K]`、`cholesky_factor_cov[K]`、`cholesky_factor_corr[K]`は`matrix[K, K]`という次元を持つ`matrix`に対してだけ代入できます。Stanではこれらの型の任意の配列も使うことができます。ただし、関数の引数や返値の型や変数の宣言は少し変わります。
@@ -300,7 +269,7 @@ real entropy(vector theta) {
 ## 19.9. 再帰関数
 Stanは再帰関数の定義をサポートしています。再帰関数は場合によっては有用です。例えば、行列の累乗$(A^n)$を考えましょう。$(A^n)$は正方行列$(A)$と正の整数値$(n)$に対して次のように定義されます。
 
-![$$ A^n = \left\{\begin{array}{ll} I & \mbox{if} n = 0\mbox{, and} \\ A A^{n-1} & \mbox{if} n > 0 \end{array}\right.$$](fig/fig1.png)
+![$$ A^n = \left\{\begin{array}{ll} I & \mbox{if} n = 0\mbox{, and} \\ A A^{n-1} & \mbox{if} n > 0 \end{array}\right.$$](fig/fig2.png)
 
 ここで$(I)$は単位行列です。この定義は直接再帰関数の定義に変換できます。
 ```
