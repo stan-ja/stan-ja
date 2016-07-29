@@ -268,7 +268,7 @@ real entropy(vector theta) {
 ## 19.9. 再帰関数
 Stanは再帰関数の定義をサポートしています。再帰関数は場合によっては有用です。例えば、行列の累乗$(A^n)$を考えましょう。$(A^n)$は正方行列$(A)$と正の整数値$(n)$に対して次のように定義されます。
 
-![$$ A^n = \begin{cases} I & \text{$n = 0$のとき} \ A A^{n-1} & \text{$n > 0$のとき} \end{cases} $$](fig/fig2.png)
+![$$ A^n = \left\{\begin{array}{ll} I & \text{$n = 0$のとき} \\ A A^{n-1} & \text{$n > 0$のとき} \end{array}\right.$$](fig/fig2.png)
 
 ここで$(I)$は単位行列です。この定義は直接再帰関数の定義に変換できます。
 ```
