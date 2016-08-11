@@ -21,13 +21,14 @@ then
   exit 1
 fi
 
-artifact_filepath="${CIRCLE_ARTIFACTS}/stan-reference-2.9.0-ja-$chapter.pdf"
-artifact_url="https://circle-artifacts.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts/${CIRCLE_NODE_INDEX}${artifact_filepath}"
+artifact_filepath_base="${CIRCLE_ARTIFACTS}/stan-reference-2.9.0-ja-$chapter"
+artifact_url_base="https://circle-artifacts.com/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts/${CIRCLE_NODE_INDEX}${artifact_filepath_base}"
 username=`echo $CI_PULL_REQUEST | sed -e 's/^https:\/\/github.com\/\(.*\)\/\(.*\)\/pull\/\([0-9]*\)$/\1/'`
 reposname=`echo $CI_PULL_REQUEST | sed -e 's/^https:\/\/github.com\/\(.*\)\/\(.*\)\/pull\/\([0-9]*\)$/\2/'`
 pr_number=`echo $CI_PULL_REQUEST | sed -e 's/^https:\/\/github.com\/\(.*\)\/\(.*\)\/pull\/\([0-9]*\)$/\3/'`
 api_url="https://api.github.com/repos/${username}/${reposname}/issues/${pr_number}/comments"
-message="{ \"body\": \"[PDF for ${CIRCLE_SHA1}](${artifact_url})\" }"
+short_tag=${CIRCLE_SHA1:0:7}
+message="{ \"body\": \"* [PDF for ${short_tag}](${artifact_url_base}.pdf)\n* [HTML for ${short_tag}](${artifact_url_base}.html)\" }"
 
 curl \
   -X POST \

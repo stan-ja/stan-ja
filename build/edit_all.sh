@@ -21,6 +21,7 @@ do
       | sed -e $replace_math \
       | sed -e $replace_paths \
       >"$tmpfile"
+    echo >>"$tmpfile"  # 段落の区切りをつけるためにファイル末尾に空行を挿入
     mv -f "$tmpfile" "$md"
   fi
 done
