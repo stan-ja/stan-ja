@@ -203,7 +203,7 @@ $K$単体パラメータ化$\theta = \mathrm{softmax}(\alpha)$を、制約なし
 
 際限のなく大きくなる密度のもうひとつの例は、$\mathsf{Beta}(\phi \mid 0.5, 0.5)$のような事後分布で発生するものです。これは非常に「弱い」ベータ事前分布がデータのない群に使われているときに発生することがあります。この密度は$\phi \rightarrow 0$かつ$\phi \rightarrow 1$で際限なく大きくなります。同様に、「弱い」ベータ事前分布のベルヌーイ尤度モデルも次式のような事後分布になります。
 
-![$$ p(\phi \mid y) &\propto \mathsf{Beta}(\phi \mid 0.5, 0.5) \times \prod_{n=1}^{N}\mathsf{Bernoulli}(y_n \mid \phi)\\ &= \mathsf{Beta}(\phi \mid 0.5 + \sum_{n=1}^{N}y_n, 0.5 + N - \sum_{n=1}^{N}y_n) $$](fig/fig16.png)
+![$$\begin{array}{ll} p(\phi \mid y) &\propto \mathsf{Beta}(\phi \mid 0.5, 0.5) \times \prod_{n=1}^{N}\mathsf{Bernoulli}(y_n \mid \phi)\\ &= \mathsf{Beta}(\phi \mid 0.5 + \sum_{n=1}^{N}y_n, 0.5 + N - \sum_{n=1}^{N}y_n) \end{array}$$](fig/fig16.png)
 
 もし$N=9$で、すべて$y_n=1$であれば、事後分布は$\mathsf{Beta}(\phi \mid 9.5, 0.5)$になります。この事後分布は$\phi \rightarrow 1$で際限なく大きくなります。にもかかわらず、事後分布は正則で、事後最頻値がないにも関わらず、事後平均は正確に0.95と明確に定義されます。
 
@@ -243,7 +243,7 @@ BUGSやJAGSで実行されるギブズサンプリングは、この識別され
 
 初期値$\lambda_{1}^{(0)}$, $\lambda_{2}^{(0)}$で起こることを考えましょう。ギブズサンプリングはiteration $m$で以下の抽出を行なって進行します。
 
-![$$ \lambda_1^{(m)} &\sim p(\lambda_1 \mid \lambda_2^{(m-1)}, \sigma^{(m-1)},y)\\ \lambda_2^{(m)} &\sim p(\lambda_2 \mid \lambda_1^{(m)}, \sigma^{(m-1)},y)\\ \sigma^{(m)} &\sim p(\sigma \mid \lambda_1^{(m-1)}, \lambda_2^{(m)}, y) $$](fig/fig18.png)
+![$$\begin{array}{ll} \lambda_1^{(m)} &\sim p(\lambda_1 \mid \lambda_2^{(m-1)}, \sigma^{(m-1)},y)\\ \lambda_2^{(m)} &\sim p(\lambda_2 \mid \lambda_1^{(m)}, \sigma^{(m-1)},y)\\ \sigma^{(m)} &\sim p(\sigma \mid \lambda_1^{(m-1)}, \lambda_2^{(m)}, y) \end{array}$$](fig/fig18.png)
 
 ここで、$\lambda_1$（$\lambda_2$の抽出も対称です）の抽出を考えます。このモデルでは共役であり、したがって非常に効率的に抽出ができます。このモデルでは、次の$\lambda_1$が抽出可能な範囲は、現在の$\lambda_2$と$\sigma$の値により非常に制限されています。ギブズサンプラーは非常に速く動き、外見上はもっともらしい$\lambda_1 + \lambda_2$の推定値を与えるでしょう。しかし、事後分布の範囲全体を探索はしません。初期値付近をゆっくりランダムウォークしているに過ぎないのです。このランダムウォークの挙動は、事後分布の相関が非常に大きいときのギブズサンプリングに典型的です。これが、事後分布でパラメータが相関を持つモデルでは、ギブズサンプリングよりもハミルトニアンモンテカルロが好まれる主要な理由です。
 
