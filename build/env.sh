@@ -16,5 +16,6 @@ export PANDOC_PDF="pandoc
 export PANDOC_HTML="pandoc
   -t html5
   --standalone
+  --self-contained
   --template=build/template.html"
 
