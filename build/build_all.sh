@@ -9,6 +9,7 @@ $PANDOC_PDF \
   $target
 $PANDOC_HTML \
   --toc \
+  --self-contained \
   -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja.html" \
   $target
 
