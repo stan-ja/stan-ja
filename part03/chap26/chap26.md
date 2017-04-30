@@ -647,7 +647,7 @@ x ~ normal(0, 1);
 
 そしてこのモデルは、`x`について単位正規分布のサンプルを生成するように思えます。しかし、式`sqrt(x - x)`は消去されず、導関数に問題を発生させます。原因は、連鎖律を機械的に評価するためです。
 
-![$$\begin{array} \frac{d}{dx}\sqrt{x - x} &= \frac{1}{2\sqrt{x - x}}\times\frac{d}{dx}(x - x)\\ &= \frac{1}{0}\times(1 - 1)\\ &= \infty \times 0 \\ &= \mathrm{NaN} \end{array}$$](fig/fig01.png)
+![$$\begin{array}{rl} \frac{d}{dx}\sqrt{x - x} &= \frac{1}{2\sqrt{x - x}}\times\frac{d}{dx}(x - x)\\ &= \frac{1}{0}\times(1 - 1)\\ &= \infty \times 0 \\ &= \mathrm{NaN} \end{array}$$](fig/fig01.png)
 
 $x - x$が消去されるのではなく、連鎖律の評価の分子と分母に0を発生させます。
 
