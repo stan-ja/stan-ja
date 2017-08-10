@@ -1,11 +1,11 @@
 [![Circle CI](https://circleci.com/gh/stan-ja/stan-ja.svg?style=svg)](https://circleci.com/gh/stan-ja/stan-ja)
 
-# Modeling Language User’s Guide and Reference Manual, v2.9.0 (日本語訳)
+# Modeling Language User’s Guide and Reference Manual, v2.16.0 (日本語訳)
 
 最新版の翻訳 PDF は [releases](https://github.com/stan-ja/stan-ja/releases) から取得できます。
 
 ## 目的
-[Modeling Language User’s Guide and Reference Manual, v2.9.0](https://github.com/stan-dev/stan/releases/download/v2.9.0/stan-reference-2.9.0.pdf) の日本語訳の作成です.
+[Modeling Language User’s Guide and Reference Manual, v2.16.0](https://github.com/stan-dev/stan/releases/download/v2.16.0/stan-reference-2.16.0.pdf) の日本語訳の作成です.
 
 ## 文章のルール
 * Markdown形式で書く
@@ -21,7 +21,7 @@
 * ブロック数式は以下の3択の中から翻訳者が自由に選んでください. 1番目推奨です.
   * 3番目の方法はweb上（Github上）ではレンダリングされませんが, pdf/html化する時には反映されます.
   * 1番目の方法は面倒ですがweb上で見れてpdf/htmlも綺麗なので余裕があればお願いします.
-  * cf. [chap33](https://github.com/stan-ja/stan-ja/blob/master/part04/chap33/chap33.md)
+  * cf. [chap41](https://github.com/stan-ja/stan-ja/blob/master/part07/chap41/chap41.md)
 
 ```
 ![$$ TeX記法 (ただし1行) $$](数式画像への相対パス)
