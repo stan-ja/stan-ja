@@ -5,10 +5,10 @@ target=`get_markdown`
 
 $PANDOC_PDF \
   --toc \
-  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja.pdf" \
+  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.16.0-ja.pdf" \
   $target
 $PANDOC_HTML \
   --toc \
-  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja.html" \
+  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.16.0-ja.html" \
   $target
 
