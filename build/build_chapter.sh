@@ -16,9 +16,9 @@ then
 fi
 
 $PANDOC_PDF \
-  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja-$chapter.pdf" \
+  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.16.0-ja-$chapter.pdf" \
   $target
 $PANDOC_HTML \
-  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.9.0-ja-$chapter.html" \
+  -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.16.0-ja-$chapter.html" \
   $target
 

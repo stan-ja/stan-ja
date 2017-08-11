@@ -8,7 +8,7 @@ then
   exit 0
 fi
 
-artifact_filepath_base="${CIRCLE_ARTIFACTS}/stan-reference-2.9.0-ja"
+artifact_filepath_base="${CIRCLE_ARTIFACTS}/stan-reference-2.16.0-ja"
 artifact_filepath_pdf="${artifact_filepath_base}.pdf"
 artifact_filepath_html="${artifact_filepath_base}.html"
 if [ ! -e "$artifact_filepath_pdf" ]
@@ -26,7 +26,7 @@ build_path="gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BU
 build_url="https://circleci.com/${build_path}"
 
 release_create_url="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases"
-release_name="stan-reference-2.9.0-ja draft version ${CIRCLE_BUILD_NUM}"
+release_name="stan-reference-2.16.0-ja draft version ${CIRCLE_BUILD_NUM}"
 release_body="[ビルドログ](${build_url})"
 release_message="{ \"tag_name\": \"build-${CIRCLE_BUILD_NUM}\", \"target_commitish\": \"${CIRCLE_SHA1}\", \"name\": \"${release_name}\", \"body\": \"${release_body}\", \"prerelease\": true }"
 
