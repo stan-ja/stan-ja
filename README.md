@@ -2,7 +2,7 @@
 
 # Modeling Language User’s Guide and Reference Manual, v2.16.0 (日本語訳)
 
-最新版の翻訳 pdf は [releases](https://github.com/stan-ja/stan-ja/releases) から取得できます。
+最新版の翻訳 pdf は [releases](https://github.com/stan-ja/stan-ja/releases) から取得できます.
 
 ## 目的
 [Modeling Language User’s Guide and Reference Manual, v2.16.0](https://github.com/stan-dev/stan/releases/download/v2.16.0/stan-reference-2.16.0.pdf) の日本語訳の作成です.
@@ -49,13 +49,13 @@ $$ TeX記法 $$
 ### ソースコードやその他のルール
 * 複数行に渡るStanコードは\`\`\`と\`\`\`で囲む
 * インラインのStanコードは\`と\`で囲む
-* 自信のない箇所は英文のままにしておく. できれば, \*\*\`と\`\*\*で囲んで強調しておく.
-* 脚注については、「次のStanのプログラムを考えましょう。\^\[このモデルは\<https://github.com/stan-dev/example-models/tree/master/misc/cluster\>から入手可能です。\]」のようにします。
+* 自信のない箇所は英文のままにしておく. できれば, \*\*と\*\*で囲んで強調しておく.
+* 脚注については、「本文です。\^\[脚注です。]」のようにします.
 
 ## 運用のルールとgitの初歩
 ### 運用のルール
 
-* [章の担当決めテーブル](https://github.com/stan-ja/stan-ja/wiki/%E7%AB%A0%E3%81%AE%E6%8B%85%E5%BD%93%E6%B1%BA%E3%82%81) にアカウント名を記入します。それが作業開始の宣言になります。
+* [章の担当決めテーブル](https://github.com/stan-ja/stan-ja/wiki/%E7%AB%A0%E3%81%AE%E6%8B%85%E5%BD%93%E6%B1%BA%E3%82%81) にアカウント名を記入します. それが作業開始の宣言になります.
 * [訳語の統一](https://github.com/stan-ja/stan-ja/wiki/%E8%A8%B3%E8%AA%9E%E3%81%AE%E7%B5%B1%E4%B8%80) を読みましょう.
   * 訳語の議論をしたい場合は[ここ](https://github.com/stan-ja/stan-ja/issues/20)で行っています.
 
