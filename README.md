@@ -8,14 +8,15 @@
 [Modeling Language User’s Guide and Reference Manual, v2.16.0](https://github.com/stan-dev/stan/releases/download/v2.16.0/stan-reference-2.16.0.pdf) の日本語訳の作成です.
 
 ## 文章のルール
-pdf（閲覧したい）とhtml（検索エンジンでヒットさせたい）の両方へ自動的に変換したいためMarkdownを採用しました（そのため, 変換は便利ですが数式やリファレンスの記述でやや苦労しています）.
+pdf（閲覧したい）とhtml（検索エンジンでヒットさせたい）の両方へ自動的に変換したいためMarkdownで書くことを採用しました（そのため, 変換は便利ですが数式やリファレンスの記述でやや苦労しています）.
 
 ### Markdown関連
-* Markdown形式で書く
+* Markdownのルール
   * [参考リンク1 (pdf)](http://packetlife.net/media/library/16/Markdown.pdf)
   * [参考リンク2](http://qiita.com/Qiita/items/c686397e4a0f4f11683d) QiitaのMarkdownとは数式の部分だけは異なるので注意.
   * [参考リンク3](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
   * プレビューに使えるサイトはいくつかあります. [wri.pe](https://wri.pe/)などです.
+* 数式・コード・画像の前後や段落分けのために **空行** が必要となることに注意.
 * Part XX は #
 * Chapter は ##
 * sub chapter は ###
@@ -25,26 +26,21 @@ pdf（閲覧したい）とhtml（検索エンジンでヒットさせたい）�
 * 句読点は翻訳者の自由にしてください. 最終的なpdfとhtmlにする時には`。`を`. `に, `、`を`, `に置換します.
 
 ### 数式関連
-* ブロック数式は以下の3択の中から翻訳者が自由に選んでください. 1番目推奨です.
-  * 3番目の方法はweb上（Github上）ではレンダリングされませんが, pdf/html化する時には反映されます.
-  * 1番目の方法は面倒ですがweb上で見れてpdf/htmlも綺麗なので余裕があればお願いします.
-  * cf. [chap41](https://github.com/stan-ja/stan-ja/blob/master/part07/chap41/chap41.md)
-
-```
-![$$ TeX記法 (ただし1行) $$](数式画像への相対パス)
-```
-
-```
-![適当な文字列](数式画像への相対パス)
-```
+* ブロック数式は`$$`と`$$`で囲んでTeX記法を使ってください（ただし1行で書いてください）.
 
 ```
 $$ TeX記法 $$
 ```
 
-* TeX記法を統一するための議論も[ここ](https://github.com/stan-ja/stan-ja/issues/28)に存在します.
-* 現状pandocで数式のhtmlへの変換がうまくいっていません（[issue67](https://github.com/stan-ja/stan-ja/issues/67)）. pandocに詳しい人募集中です.
+* TeX記法がよくわからない場合は, 数式の画像を作成して以下のように数式画像への相対パスを記載してください（[参考](https://github.com/stan-ja/stan-ja/blob/master/part07/chap41/chap41.md)）.
+
+```
+![適当な文字列](数式画像への相対パス)
+```
+
 * インライン数式は`$`と`$`で囲んでTeX記法を使ってください.
+* TeX記法を統一するための議論も[ここ](https://github.com/stan-ja/stan-ja/issues/28)に存在します.
+* なお, 過去はGitHub上のMarkdown表示でも数式を閲覧したかったため, ブロック数式を[このように](https://github.com/stan-ja/stan-ja/blob/master/part07/chap41/chap41.md) 書いていました.
 
 ### ソースコードやその他のルール
 * 複数行に渡るStanコードは\`\`\`と\`\`\`で囲む
@@ -53,7 +49,7 @@ $$ TeX記法 $$
 * 脚注については、「本文です。\^\[脚注です。]」のようにします.
 
 ## 運用のルールとgitの初歩
-### 運用のルール
+### プロジェクト全般に関すること
 
 * [章の担当決めテーブル](https://github.com/stan-ja/stan-ja/wiki/%E7%AB%A0%E3%81%AE%E6%8B%85%E5%BD%93%E6%B1%BA%E3%82%81) にアカウント名を記入します. それが作業開始の宣言になります.
 * [訳語の統一](https://github.com/stan-ja/stan-ja/wiki/%E8%A8%B3%E8%AA%9E%E3%81%AE%E7%B5%B1%E4%B8%80) を読みましょう.
@@ -71,7 +67,7 @@ $$ TeX記法 $$
 * GitHub上で「そのbranchをmaster branchへマージするためのPull Request」を作成します. レビュワーを募ります（最低1名）.
 * レビュワーはレビューをします.
   * レビュワーはPull Request上でコメントします. 「Files changed」のページで行単位でコメントできます.
-  * 「Pull Requestの際に作られるpdfやhtml」「GitHub上のMarkdown表示」を見ながらレビューを行います.
+  * Pull Requestの際に作られるpdfまたはhtmlを見ながらレビューを行います.
   * レビュワーの指摘を受けて, 訳者はコメントに返事をしたり, 議論します.　
   * 各自のPCで訳を修正して, commitおよび同じbranchにpushします.
 * レビュワーのLGTM（Looks Good To Me = いいと思うよ）が出るまで上記のレビューを繰り返します.
@@ -117,13 +113,13 @@ git commit -m '1章を翻訳しました'
 git push origin create/partXX/chapYY
 ```
 
-### Pull Request作成時にできるpdfへのリンクが見つからない場合の確認方法
+### レビュー時にpdfとhtmlへのリンクが見つからない場合の確認方法
 
-GitHub上でPull Requestを作成すると[CircleCI](https://circleci.com/)で自動的にpdfに変換処理が行われます.
+GitHub上でPull Requestを作成すると[CircleCI](https://circleci.com/)で自動的にpdfとhtmlに変換処理が行われます.
 Pull Requestページのcommit履歴の横にチェックマークまたはバツ印がつきます. これらはCircleCIのビルドページへのリンクになっています.
 
 ビルドが成功している場合はArtifactsというタブが表示されます（ログインしている必要があります）.
-その中にpdfへのリンクが表示されています.
+その中をドリルダウンしていくとpdfとhtmlへのリンクが表示されています.
 ビルドが失敗している場合はTest Resultsというタブの`$ build/build_chapter.sh`というブロックをクリックするとエラー詳細が表示されます.
 
 ![PR](img/pr.png)
