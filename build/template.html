@@ -4,37 +4,50 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 $for(author-meta)$
   <meta name="author" content="$author-meta$">
 $endfor$
+
 $if(date-meta)$
   <meta name="dcterms.date" content="$date-meta$">
 $endif$
+
   <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
   <style type="text/css">code{white-space: pre;}</style>
+
 $if(quotes)$
   <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
 $endif$
+
 $if(highlighting-css)$
   <style type="text/css">
 $highlighting-css$
   </style>
 $endif$
+
 $for(css)$
   <link rel="stylesheet" href="$css$">
 $endfor$
-$if(math)$
-  $math$
-$endif$
+
+<script type="text/javascript">
+  var fileref=document.createElement('script')
+  fileref.setAttribute("type","text/javascript")
+  fileref.setAttribute("src", "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML")
+  document.getElementsByTagName("head")[0].appendChild(fileref)
+</script>
+
 $for(header-includes)$
   $header-includes$
 $endfor$
 </head>
+
 <body>
 $for(include-before)$
 $include-before$
 $endfor$
 $if(title)$
+
 <header>
 <h1 class="title">$title$</h1>
 $if(subtitle)$
