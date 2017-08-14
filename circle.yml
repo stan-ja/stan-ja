@@ -5,8 +5,8 @@ dependencies:
   pre:
     - sudo aptitude update -y
     - sudo aptitude install -y texlive-xetex fonts-ipafont bc jq
-    - wget https://github.com/jgm/pandoc/releases/download/1.14.1/pandoc-1.14.1-1-amd64.deb
-    - sudo dpkg -i pandoc-1.14.1-1-amd64.deb
+    - wget https://github.com/jgm/pandoc/releases/download/1.19.2.1/pandoc-1.19.2.1-1-amd64.deb
+    - sudo dpkg -i pandoc-1.19.2.1-1-amd64.deb
 
 checkout:
   post:

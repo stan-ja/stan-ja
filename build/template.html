@@ -4,54 +4,47 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 $for(author-meta)$
   <meta name="author" content="$author-meta$">
 $endfor$
+
 $if(date-meta)$
   <meta name="dcterms.date" content="$date-meta$">
 $endif$
+
   <title>$if(title-prefix)$$title-prefix$ - $endif$$pagetitle$</title>
   <style type="text/css">code{white-space: pre;}</style>
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+
 $if(quotes)$
   <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
 $endif$
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css" />
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/highlight.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/languages/stan.min.js"></script>
-  <script type="text/javascript">
-    hljs.initHighlightingOnLoad();
-  </script>
-  <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-      "tex2jax": {
-        "inlineMath": [["$$", "$$"], ["\\(", "\\)"]]
-      }
-    });
-  </script>
+
 $if(highlighting-css)$
   <style type="text/css">
 $highlighting-css$
   </style>
 $endif$
+
 $for(css)$
   <link rel="stylesheet" href="$css$">
 $endfor$
+
 $if(math)$
   $math$
 $endif$
+
 $for(header-includes)$
   $header-includes$
 $endfor$
 </head>
+
 <body>
 $for(include-before)$
 $include-before$
 $endfor$
 $if(title)$
+
 <header>
 <h1 class="title">$title$</h1>
 $if(subtitle)$
