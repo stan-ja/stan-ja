@@ -71,22 +71,11 @@ functionブロックで定義された関数は，任意のブロックで利用
 変数を読んだり書いたりするときの要点と定義を示した表を図6.1に示しました。変数を見るときの一つのやり方は，その関数の項を見ることです。どの変数を使おうか決めるには，図6.2のチャートを参考にしてください。最終行は該当する場所がありませんが，それはパラメータに依存しない変数を各iterationで表示する必要がないからです。この章の残りは，変数や文が各ブロックでいつ，どのように実行するかの詳細を完全に記載します。
 
 
-| Block | Stmt | Action/Period |
-|:-----------|------------:|:------------:|
-|:-----------|------------:|:------------:|
-| `data` | no | read/chain |
-| `transformed data` | yes | evaluate / chain |
-| `parameters` | no | inv.transform, Jacobian / leapfrog |
-|  |  | inv.transform, write / sample |
-| `transformed parameters` | yes | evaluate / leapfrog |
-|  |  | write / sample |
-| `model` | yes | evaluate / leapfrog step |
-| `generated quantities` | yes | eval / sample |
-|  |  | write / sample |
-|:-----------|------------:|:------------:|
-|:-----------|------------:|:------------:|
-| (*initialization*) | n/a | read, transform / cahin |
+![図6.1](fig/tbl6_1.png)
 
+図6.1: 最後の列に書いてあるread,　write transform そして評価と**predicities**は，最初の列にあるStanプログラムブロックと対応しています。真ん中の列が示すのは，そのブロックが文を許すかどうかです。最後の行が示すのは，パラメータの初期化がread, transformの操作が各チェインについて必要であることを表しています。
+
+![図6.2](fig/tbl6_2.png)
 
 
 ## 6.2 統計的変数分類法
