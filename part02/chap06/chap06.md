@@ -46,7 +46,7 @@ generated quantities{
 
 functionブロックで定義された関数は，任意のブロックで利用できます。ほとんどの関数はどのブロックでも使用でき，パラメータやデータを混ぜるのにつかたりできます（定数やリテラルを含むこともできます）。
 
-乱数を生成する関数は，generated quantitiesブロックに限定されます。そのような関数は後ろに`_rng`をつけます。**Log-probability modifying functions toblocks where the log probability accumulator is in scope (transformed parametersand model);**　そのような関数は後ろに`_lp`をつけます。
+乱数を生成する関数は，generated quantitiesブロックに限定されます。そのような関数は後ろに`_rng`をつけます。**対数確率を変更した関数は，その対数確率を累積する計算をブロック（trasnformed parametersとmodelブロック)のスコープの中におきますが**，そのような関数は後ろに`_lp`をつけます。
 
 プログラムの中で宣言される密度関数は，サンプリング文で使えます。
 
@@ -77,9 +77,51 @@ functionブロックで定義された関数は，任意のブロックで利用
 
 ![図6.2](fig/tbl6_2.png)
 
+図6.2:この表が示すのは，もとになるデータやパラメータではない変数を宣言すべき場所を示しており，パラメータの項を定義すべきかどうか，モデルブロックで定義される対数確率関数で使われるかどうか，表示するかどうかを表しています。アスタリスク(\*)が付いている二つの行は，いかなるパラメータの値にも依存しない変数をiterationごとに表示する必要がないときは，使うべきではないことを意味しています（必要なときにどうやってこれらを表示するかに付いての情報は，この章の脚注2をみてください）。
 
 ## 6.2 統計的変数分類法
 
 (Gelman and Hill, 2007, p.366)は，ベイジアンモデリングで用いられている変数の分類法を提案しています。図6.3には，欠損データも含めてGelman and Hillの変数分類に沿って，Stanで宣言したり定義したりする場所を示しています。
 
 定数はリテラル，データ変数，あるいは変数変換後の変数としてモデルに組み込むことができます。
+
+![図6.3](fig/tbl6_3.png)
+
+図6.3:左の列に示されている種類の変数は，右の列で示されているブロックのどれか一つの中で宣言されている必要があります。
+
+もし定数がデータ変換する変数の中で使われていたら，`data`ブロックにおいて要素のサイズを特定するのに使うことはできません。
+
+```
+data{
+		int<lower=0> N;   //モデル化されないデータ
+		real y[N];        // モデル化されるデータ
+		real mu_mu;       // 設定。モデル化されないパラメータ
+		real<lower=0> sigma_mu; // 設定。モデル化されないパラメータ
+}
+transformed data{
+	real<lower=0> alpha;  // 定数。モデル化されないパラメータ
+	real<lower=0> beta;   // 定数。モデル化されないパラメータ
+	alpha = 0.1;
+	beta = 0.1;
+}
+parameters{
+	real mu_y;           // モデル化されるパラメータ
+	real<lower=0> tau_y; // モデル化されるパラメータ
+}
+transformed parameters{
+	real<lower=0> sigma_y;   // 導出される量(パラメータ)
+	sigma_y = pow(tau_y, -0.5);
+}
+model{
+	tau_y ~ gamma(alpha,beta);
+	mu_y ~ normal(mu_mu,sigma_mu);
+	for (n in 1:N)
+		y[n] ~ normal(mu_y, sigma_y);
+}
+generated quantities{
+	real variance_y;     // 導出される量(変換するもの)
+	varianve_y = sigma_y * sigma_y;
+}
+```
+
+この例では，
