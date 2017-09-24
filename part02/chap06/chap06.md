@@ -7,25 +7,25 @@ Stanプログラムは名前をつけられた一連ブロックに沿って構�
 名前をつけられたプログラムブロックのフルセットの例は，次のような骨格を持ったStanプログラムです。
 
 ```
-functions{
+functions {
 	//... 関数の宣言と定義
 }
-data{
+data {
 	//... 宣言
 }
-tramsformed data{
+tramsformed data {
 	//... 宣言 ... 文 ...
 }
-parameters{
+parameters {
 	//... 宣言
 }
-transformed parameters{
+transformed parameters {
 	//... 宣言 ... 文 ...
 }
-model{
+model {
 	//... 宣言 ... 文 ...
 }
-generated quantities{
+generated quantities {
 	//... 宣言 ... 文 ...
 }
 ```
@@ -34,11 +34,11 @@ generated quantities{
 
 #### 選択と順序
 
-全てのブロックは取捨選択できます。これが意味するのは，Stanコンパイラが警告が発せられるようなことがあったとしても，空の文字列でも構わないということです。Stanのプログラムブロックは上で示したプログラムの骨格で示された順番に置かなければなりません。各ブロックの中では，宣言や文は選択性ですが，宣言が文の前に来なければならないという制約はあります。
+全てのブロックは取捨選択できます。これが意味するのは，Stanコンパイラに警告が発せられるようなことがあったとしても，空の文字列でも構わないということです。Stanのプログラムブロックは上で示したプログラムの骨格で示された順番に置かなければなりません。各ブロックの中では，宣言や文は選択性ですが，宣言が文の前に来なければならないという制約はあります。
 
 #### 変数のスコープ
 
-各ブロックで宣言された変数は，それ以降全ての文に対してスコープを持ちます^[訳注；スコープとは「見える範囲」という意味で，変数名や関数名が参照できる範囲のことです。]。つまり，transformed dataブロックで宣言されあ変数はmodelブロックで使うことができます。でも，generated quantitiesブロックで宣言された変数はそれより前のどのブロックでも使うことができません。もちろんmodelブロックでも。このルールの例外は，モデルブロックで宣言される変数で，modelブロックでの変数は常にmodelブロックローカルであり，generated quantitiesブロックでもアクセスすることができません。すなわちmodelとgenerated quantitiesブロックでの変数にアクセスできるようにしようと思うなら，transformed parameterブロックで宣言しなければなりません。
+各ブロックで宣言された変数は，それ以降全ての文に対してスコープを持ちます^[訳注；スコープとは「見える範囲」という意味で，変数名や関数名が参照できる範囲のことです。]。つまり，transformed dataブロックで宣言された変数はmodelブロックで使うことができます。でも，generated quantitiesブロックで宣言された変数はそれより前のどのブロックでも使うことができません。もちろんmodelブロックでも。このルールの例外は，モデルブロックで宣言される変数で，modelブロックでの変数は常にmodelブロックローカルであり，generated quantitiesブロックでもアクセスすることができません。すなわちmodelとgenerated quantitiesブロックでの変数にアクセスできるようにしようと思うなら，transformed parameterブロックで宣言しなければなりません。
 
 関数のパラメータとして宣言された変数のスコープは，関数定義のボディの中だけで有効で，（定数を）割り当てることはできません。
 
@@ -89,33 +89,33 @@ functionブロックで定義された関数は，任意のブロックで利用
 もし定数がデータ変換する変数の中で使われていたら，`data`ブロックにおいて要素のサイズを特定するのに使うことはできません。
 
 ```
-data{
-		int<lower=0> N;   //モデル化されないデータ
-		real y[N];        // モデル化されるデータ
-		real mu_mu;       // 設定。モデル化されないパラメータ
+data {
+		int<lower=0> N;   		//モデル化されないデータ
+		real y[N];       		// モデル化されるデータ
+		real mu_mu;      		// 設定。モデル化されないパラメータ
 		real<lower=0> sigma_mu; // 設定。モデル化されないパラメータ
 }
-transformed data{
+transformed data {
 	real<lower=0> alpha;  // 定数。モデル化されないパラメータ
 	real<lower=0> beta;   // 定数。モデル化されないパラメータ
 	alpha = 0.1;
 	beta = 0.1;
 }
-parameters{
+parameters {
 	real mu_y;           // モデル化されるパラメータ
 	real<lower=0> tau_y; // モデル化されるパラメータ
 }
-transformed parameters{
+transformed parameters {
 	real<lower=0> sigma_y;   // 導出される量(パラメータ)
 	sigma_y = pow(tau_y, -0.5);
 }
-model{
+model {
 	tau_y ~ gamma(alpha,beta);
 	mu_y ~ normal(mu_mu,sigma_mu);
 	for (n in 1:N)
 		y[n] ~ normal(mu_y, sigma_y);
 }
-generated quantities{
+generated quantities {
 	real variance_y;     // 導出される量(変換するもの)
 	varianve_y = sigma_y * sigma_y;
 }
@@ -215,7 +215,7 @@ Stanの二つのサンプラー，標準的なハミルトニアンモンテカ�
 
 ### 6.6 プログラムブロック:`transformed parameters`
 
-`transformed parameters`ブロックは，任意の変数宣言と，それに伴う文からなります文が実行された後，変換されたパラメータにおける定数が有効ニアなります。パラメータ変換の時に宣言されたあらゆる変数は，サンプルによって作られるアウトプットの一部になります。
+`transformed parameters`ブロックは，任意の変数宣言と，それに伴う文からなります。文が実行された後，変換されたパラメータにおける定数が有効になります。パラメータ変換の時に宣言されたあらゆる変数は，サンプルによって作られるアウトプットの一部になります。
 
 データ，あるいは変換されたデータの中ですっかり定義されている変数はいずれも，`transformed data`ブロックで宣言，あるいは定義されていなければなりません。こうした量を`transformed parameters`ブロックで定義することは可能ですが，`transformed data`のところで定義する場合に比べてあまり効率が良くありません。
 
