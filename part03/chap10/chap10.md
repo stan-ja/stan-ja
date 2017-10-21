@@ -339,13 +339,13 @@ read<lower = -1, upper = 1> phi;
 
 確率的ボラティリティモデルは、離散時間の潜在確率過程に従って、証券購入のオプションのような資産収益のボラティリティ（すなわち分散）を扱います(Kim et al., 1998)。データは、$T$個の等間隔時点における原資産に対する平均修正（すなわち中央化）収益$y_{t}$からなります。Kimらは、以下の回帰に似た式を使って典型的な確率ボラティリティモデルを定式化しています。ここで、潜在パラメーター$h_{t}$は対数ボラティリティを、パラメーター$\mu$は平均対数ボラティリティを、$\phi$はボラティリティ項の持続性をしめします。変数$\epsilon_{t}$は時点$t$における資産収益に対するホワイトノイズショック（すなわち乗法的誤差）で、$\delta_{t}$は時点$t$におけるボラティリティに対するショックを表します。
 
-$$ \begin{array}{rl}y_{t} = \epsilon_{t}\exp(h_{t}/2) $$
+$$ y_{t} = \epsilon_{t}\exp(h_{t}/2) $$
 
 $$ h_{t+1} = \mu + \phi(h_{t}-\mu)+\delta_{t}\sigma $$
 
 $$ h_{1} \sim \mathsf{Normal}\left(\mu, \frac{\sigma}{\sqrt{1-\phi^{2}}}\right) $$
 
-$$ \epsilon_{t} \sim \mathsf{Normal}(0, 1); \quad \delta_{t} \sim \mathsf{Normal}(0, 1)\end{array} $$
+$$ \epsilon_{t} \sim \mathsf{Normal}(0, 1); \quad \delta_{t} \sim \mathsf{Normal}(0, 1) $$
 
 最初の行を変形すると、$\epsilon_{t} = y_{t}\exp(-h_{t}/2)$となり、$y_{t}$のサンプリング分布は以下のように書けます。
 
