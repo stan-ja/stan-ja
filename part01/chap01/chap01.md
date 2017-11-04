@@ -1,5 +1,5 @@
 ## 1. Overview
-このドキュメントは統計モデリング言語であるStanのユーザーガイド兼リファレンスマニュアルです。この導入の章ではStanの全体像について紹介しますが、残りの章ではモデルの実際のプログラミングや、Stanのモデリング言語としての詳細な解説を、コードやデータの型も含めて、実践的な解説を行います。
+このドキュメントは、統計モデリング言語であるStanのユーザーガイド兼リファレンスマニュアルです。この導入の章ではStanの全体像について紹介しますが、残りの章では、モデルの実際のプログラミングや、Stanのモデリング言語としての詳細な解説を、コードやデータの型も含めて、実践的な解説を行います。
 
 ### 1.1 Stan Home Page
 
@@ -13,36 +13,40 @@ Stan Projectでは３つのインターフェースをプロジェクトの一�
 提供されているすべてのインターフェースについて、getting-started guideやドキュメントが完全なソースコードと共に提供されています。
 
 #### CmdStan
-CmdStanはコマンドラインからStanを利用することを可能にします。ある意味でCmdStanはStanのリファレンス実装ともいえます。もともとCmdStanのドキュメントはこのドキュメントの一部でしたが、今では独立したドキュメントとなっています。CmdStanのホームページは以下になります。
+CmdStanは、コマンドラインからStanを利用することを可能にします。ある意味でCmdStanはStanのリファレンス実装ともいえます。もともとCmdStanのドキュメントはこのドキュメントの一部でしたが、今では独立したドキュメントとなっています。CmdStanのホームページは以下になります。
 
 [http://mc-stan.org/cmdstan.html](http://mc-stan.org/cmdstan.html)
 
 #### RStan
-RStanはRにおけるStanのインターフェースです。R2WinBUGSやR2jagsでは、Rから外部のソフトウェアとしてWinBUGSやJAGSを呼び出していました。RStanではそうではなく、むしろRのメモリを通じたインターフェースになっています。RStanのホームページは以下になります。
+RStanは、RにおけるStanのインターフェースです。R2WinBUGSやR2jagsでは、Rから外部のソフトウェアとしてWinBUGSやJAGSを呼び出していました。RStanではそうではなく、むしろRのメモリを通じたインターフェースになっています。RStanのホームページは以下になります。
 
 [http://mc-stan.org/rstan.html](http://mc-stan.org/cmdstan.html)
 
 #### PyStan
-PyStanはPythonにおけるStanのインターフェースです。外側のStanを呼び出すというよりは、RStanと同様にPythonのメモリレベルのインターフェースです。PyStanのホームページは以下になります。
+PyStanは、PythonにおけるStanのインターフェースです。外側のStanを呼び出すというよりは、RStanと同様にPythonのメモリレベルのインターフェースです。PyStanのホームページは以下になります。
 
 [http://mc-stan.org/pystan.html](http://mc-stan.org/pystan.html)
 
 
 ##### MatlabStan
-MatlabStanはMATLABにおけるStanへのインターフェースです。RstanやPyStanとは異なり、現状MatlabStanはCmdStanのラッパーです。MatlabStanのホームページは以下になります。
+MatlabStanは、MATLABにおけるStanへのインターフェースです。RstanやPyStanとは異なり、現状MatlabStanはCmdStanのラッパーです。MatlabStanのホームページは以下になります。
 
 [http://mc-stan.org/matlab-stan.html](http://mc-stan.org/matlab-stan.html)
 
 ##### Stan.jl
-Stan.jlはJuliaにおけるStanのインターフェースです。これもMatlabStanと同様に、CmdStanのラッパーです。Stan.jlのホームページは以下になります。
+Stan.jlは、JuliaにおけるStanのインターフェースです。これもMatlabStanと同様に、CmdStanのラッパーです。Stan.jlのホームページは以下になります。
 
 [http://mc-stan.org/julia-stan.html](http://mc-stan.org/julia-stan.html)
 
 ##### StataStan
-StataStanはStataにおけるStanのインターフェースです。MatlabStan、Stan.jl と同様にこれもCmdStanのラッパーです。StataStanのホームページは以下になります。
+StataStanは、StataにおけるStanのインターフェースです。MatlabStanと同様にCmdStanのラッパーです。StataStanのホームページは以下になります。
 
 [http://mc-stan.org/stata-stan.html](http://mc-stan.org/stata-stan.html)
 
+##### MathematicaStan
+MathematicaStanは、MathematicaにおけるStanのインターフェイスです。MatlabStanと同様にCmdStanのラッパーです。MathematicaStanのホームページは以下になります。
+
+[http://mc-stan.org/mathematica-stan.html](http://mc-stan.org/mathematica-stan.html)
 
 ### 1.3 Stanのプログラム
 Stanのプログラムでは条件付き確率分布 $p(\theta \mid y, x)$ を通して統計モデルが定義されます。ここで$\theta$はモデルに組み込まれる、一連の未知の変数(例： モデルのパラメータ、隠れ変数、欠測データ、将来の予測値)です。$y$はモデルに組み込まれる、一連の値が得られている変数です。$x$はモデルに組み込まれない、一連の説明変数と定数です（例：サイズ、ハイパーパラメータ）。
@@ -71,11 +75,11 @@ StanはCやFortranと同様（C++、R、PythonやJavaなどと部分的に同じ
 Stan言語は、CやRと同様に、チャーチ＝チューリング完全 [Church (1936); Turing (1936); Hopcroft and Motwani (2006)]です。それはチューリングマシン（もしくはC）で計算可能ないかなるプログラムもStanで実装できることを意味しています（もちろんその道は険しいですが）。ちなみにチューリング完全であるために求められるのは、ループと条件分岐、そしてループの中でサイズが変更できる配列のみです。
 
 ### 1.4 コンパイルとStanプログラムの実行
-Stanのコードはまず最初にStanのコンパイラ`stanc`によってC++の言語へと変換され、そしてそのC++はプラットフォーム依存の単独で実行可能な形式に変換されます。またStanはWindows、Mac OS X、Linuxなど様々な実行可能形式を出力することができます。^[RやPythonなどの高レベルなスクリプト言語から使う場合、Stanのプログラムは動的にリンク可能なオブジェクトファイルに変換されます。]
+Stanのコードはまず最初にStanのコンパイラ`stanc`によってC++のプログラムへと変換され、そしてそのC++プログラムはプラットフォーム依存の単独で実行可能な形式に変換されます。またStanはWindows、Mac OS X、Linuxなど様々な実行可能形式を出力することができます。^[RやPythonなどの高レベルなスクリプト言語から使う場合、Stanのプログラムは動的にリンク可能なオブジェクトファイルに変換されます。]
 Stanの実行ファイルを実行すると、まず既知の $y$ と $x$ を読み込み、その妥当性を評価します。そして（独立ではない）同一分布に従うサンプルの列 $\theta^{(1)},\theta^{(2)},\dots$ を生成します。これらは各々、周辺分布 $p(\theta  \mid  y, x)$ に従います。
 
 ### 1.5 サンプリング
-連続値をとるパラメータに対してStanは Hamiltonian Monte Carlo (HMC) Sampling (Duane et al., 1987; Neal, 1994, 2011) というある種のマルコフ連鎖モンテカルロ（MCMC）サンプリング(Metropolis et al., 1953)を用います。Stanは離散値をとるパラメータのサンプリングは提供していません。観測値としては離散値を直接利用することができますが、離散値をとるパラメータはモデルから周辺化消去されている必要があります。10章と12章では、いかにして有限の離散値をとるパラメータを和をとってモデルから消去するか、そしてその消去がもたらすサンプリング効率の大幅な向上について議論します。
+連続値をとるパラメータに対してStanは Hamiltonian Monte Carlo (HMC) Sampling (Duane et al., 1987; Neal, 1994, 2011) というある種のマルコフ連鎖モンテカルロ（MCMC）サンプリング(Metropolis et al., 1953)を用います。Stanは離散値をとるパラメータのサンプリングは提供していません。観測値としては離散値を直接利用することができますが、離散値をとるパラメータはモデルから周辺化消去されている必要があります。13章と15章では、いかにして有限の離散値をとるパラメータを和をとってモデルから消去するか、そしてその消去がもたらすサンプリング効率の大幅な向上について議論します。
 
 HMCは対数確率関数の勾配を使うことで、定常分布への収束とパラメタの探索の効率化を促進しています。推定すべき量のベクトル$\theta$は仮想的な粒子の位置と解釈されます。それぞれのiterationにおいて、ランダムな運動量を生成し、（負の）対数確率関数を決めているポテンシャルエネルギー内の粒子の経路をシミュレーションします。ハミルトンの分解からこのポテンシャルの勾配が運動量の変化を与え、この運動量が位置の変化を与えることが分かります。この時間的に連続な変化は、時間をシミュレーションが容易な離散値とみなすleapfrogアルゴリズムによって近似されます。続けて、様々なシミュレーションエラーを直し、マルコフ連鎖の遷移において詳細釣り合い条件を満たすようにするために、メトロポリス法の棄却ステップが適用されます (Metropolis et al., 1953; Hastings, 1970)。
 
@@ -95,7 +99,7 @@ $M$ 個の独立に抽出されたサンプルに基づいて母平均を推定�
 #### ベイズ推定とモンテカルロ法
 Stanはフルベイズの推定をサポートするために開発されました。ベイズ推定は下記の正規化されていないベイズ則
 
-![$$p(\theta \mid y, x) \propto p(y \mid \theta, x)p(\theta, x)$$](fig/fig1.png)
+$$p(\theta \mid y, x) \propto p(y \mid \theta, x)p(\theta, x)$$
 
 に基づいています。これは、データ $y$（と定数$x$）が与えられたもとでのパラメータ $\theta$ の事後分布 $p(\theta  \mid  y, x)$ が尤度 $p(y  \mid  \theta, x)$ と事前分布 $p(\theta, x)$ の積に比例することを表します。
 
@@ -106,7 +110,7 @@ Stanでは、ベイズモデリングは定係数を除いて事後確率関数�
 ### 1.6 最適化
 Stanは最適化に基づく推論もサポートしています。与えられた事後分布 $p(\theta \mid y)$ に対して、Stanは以下で定義される事後分布の最頻値 $\theta^\ast$ を見つけることができます。
 
-![$$\theta^\ast = \text{argmax}_\theta p(\theta \mid y)$$](fig/fig2.png)
+$$\theta^\ast = \text{argmax}_\theta p(\theta \mid y)$$
 
 ここで $\text{argmax}_v f(v)$ という記法は 関数 $f(v)$ を最大化する $v$ の値を選ぶことを意味します。
 
@@ -124,8 +128,8 @@ Stanはベイズ推定を近似する変分推論もサポートしています(
 
 変分推論は事後分布 $p(\theta  \mid  y)$ をシンプルなパラメトリックな分布 $q(\theta  \mid  \phi)$ で近似します。このことは真の事後分布との以下で与えられるKullback-Leibler情報量を最小化することに対応します。
 
-![$$\phi^\ast = \text{argmin}_\phi \text{KL}[q(\theta \mid \phi) \Vert p(\theta  \mid  y)]$$](fig/fig3.png)
+$$\phi^\ast = \text{argmin}_\phi \text{KL}[q(\theta \mid \phi) \Vert p(\theta  \mid  y)]$$
 
-これはベイズ推定の問題を、解がwell-definedな計量をもつ最適化問題に帰着できることを意味します。変分推論では、サンプリングに比べてオーダーが異なるほど収束が速いです。近似の精度はモデルによって異なります。変分推論が点推定のテクニックではないことに注意すると、結果は事後分布を近似した分布だということができます。
+これはベイズ推定の問題を、解がwell-definedな計量をもつ最適化問題に帰着できることを意味します。変分推論は、サンプリングと比較すると桁違いに速く収束します。近似の精度はモデルによって異なります。変分推論が点推定のテクニックではないことに注意すると、結果は事後分布を近似した分布だということができます。
 
 Stanでは自動微分変分推論（Automatic Differentiation Variational Inference、ADVI）というアルゴリズムが実装されています。このアルゴリズムはStanの変数変換ライブラリや自動微分に関するツールボックスを活用するようにデザインされています(Kucukelbir et al., 2015)。ADVIは変分推論のアルゴリズムを導出するのに典型的に必要となるすべての数学を回避し、いかなるStanのモデルにおいても動作します。
