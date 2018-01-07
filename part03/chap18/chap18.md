@@ -499,9 +499,12 @@ $\alpha$に対する半$t$あるいは半ガウス事前分布には、ゼロの
 
 #### ガウス過程による予測推論
 
-
+与えられた入力$x$の列について、対応する出力$y$が観測されているとします。
+新しい入力列$\tilde{x}$が与えられたとき、それらのラベルの事後予測分布は、サンプリング出力$\tilde{y}$により以下のように計算されます。
 
 $$ p(\tilde{y} \mid \tilde{x},x,y) = \frac{p(\tilde{y},y\mid\tilde{x},x)}{p(y \mid x)} \propto p(\tilde{y},y \mid \tilde{x},x) $$
+
+Stanでそのまま実装するには、観測された$y$と観測されていない$\tilde{y}$の同時分布の点からモデルを定義します。
 
 ```
 data {
@@ -551,7 +554,23 @@ generated quantities {
 }
 ```
 
+入力ベクトル`x1`と`x2`は、観測された出力ベクトル`y1`と同様に、データとして宣言します。
+未知の出力ベクトル`y2`は、入力ベクトル`x2`に対応し、`generated quantities`ブロックで宣言され、モデルが実行されるときにサンプリングされます。
+
+`transformed data`ブロックは、入力ベクトル`x1`と`x2`とを単一のベクトル`x`に結合するのに使われています。
+
+`model`ブロックは、結合された出力ベクトル`f`についての局所変数を宣言・定義するのに使われています。`f`は、既知の出力`y1`と未知の出力`y2`の条件付き平均を連結したもので構成されます。
+したがって、結合された出力ベクトル`f`は、結合された入力ベクトル`x`とそろったものとなっています。
+あとは、`y`についての単変量正規分布のサンプリング文を定義することだけです。
+
+`generated quantities`ブロックでは量`y2`を定義しています。
+`y2`は、`f`の適切な要素にそれぞれ対応する平均を持つ、`N2`個の単変量正規分布をサンプリングすることにより生成します。^[このプログラムは例題モデルリポジトリにあります。http://mc-stan.org/documentation を参照してください。]
+
 ##### 非ガウス分布のGPでの予測推論
+
+非ガウス分布のGPでも、ガウス分布GPとほとんど同様に予測推論を行なうことができます。
+
+ロジスティックガウス過程回帰を使った予測のための以下のフルモデルを考えます。^[このモデルは例題モデルリポジトリにあります。http://mc-stan.org/documentation を参照してください。]
 
 ```
 data {
@@ -603,9 +622,21 @@ generated quantities {
 
 ##### 同時予測推論の解析形
 
+ガウス分布の観測値についてのガウス過程のベイズ予測推論は、事後分布を解析的に導出し、そこから直接サンプリングすることにより高速化できます。
+
+いきなり結果を示すと、以下のようになります。
+
 $$ p(\tilde{y}\mid\tilde{x},y,x) = \mathsf{Normal}(K^\top\Sigma^{-1}y,\Omega-K^\top\Sigma^{-1}K) $$
 
+ここで、$\Sigma = K(x\mid\alpha,\rho,\sigma)$は、共分散関数を入力$x$と観測された出力$y$に適用した結果です。$\Omega = K(\tilde{x}\mid\alpha,\rho)$は、予測値の推測のために共分散関数を入力$\tilde{x}$に適用した結果です。また、$K$は、入力$x$と$\tilde{x}$の共分散の行列です。指数化二次共分散関数の場合は以下のようになります。
+
 $$ K(x\mid\alpha,\rho)_{i,j} = \eta^2\exp\left(-\frac{1}{2\rho^2}\sum_{d=1}^D(x_{i,d}-\tilde{x}_{j,d})^2\right) $$
+
+$x$と$\tilde{x}$の要素のインデックスは決して同じにはなりませんから、$\sigma^2$を含むノイズ項はありません。
+
+下のStanコード^[このプログラムは例題モデルリポジトリにあります。http://mc-stan.org/documentation を参照してください。]は事後分布の解析型を使っており、コレスキー分解を使って、結果となる多変量正規分布をサンプリングしています。
+データ宣言は潜在変数の例と同じですが、`gp_pred_rng`という関数を定義しています。この関数は、観測されたデータ`y1`で条件づけられた事後予測平均からの抽出を生成します。
+$p(\tilde{y})$の条件つき平均と条件つき共分散を計算する際、行列-行列の乗算の数を減らすために、このコードは三角行列解（**triangular solvesの訳??**）にコレスキー分解を使っています。
 
 ```
 functions {
@@ -687,21 +718,46 @@ generated quantities {
 }
 ```
 
-
 #### 多出力のガウス過程
+
+$x_i \in \mathbb{R}^K$で観測された観測値$y_i \in \mathbb{R}^M$があるとします。
+このデータは以下のようにモデリングできます。
 
 $$ \begin{array}{l} y_i \sim \mathsf{MultiNormal}(f(x_i),\mathbf{I}_M\sigma^2)\\ f(x) \sim \mathsf{GP}(m(x), K(x\mid\theta,\phi))\\ K(x\mid\theta) \in \mathbb{R}^{M \times M}, f(x), m(x) \in \mathbb{R}^M \end{array} $$
 
+ここで、$K(x,x^\prime\mid\theta,\phi)_{[m,m^\prime]}$の要素は、$f_m(x)$とf_{m^\prime}(x^\prime)(x)との共分散を定義しています。
+このようにガウス過程を構築すると、$f(x)$の出力次元の間の共分散を推定できます。
+もし、カーネル$K$を以下のようにパラメーター化するなら、
+
 $$ K(x,x^\prime\mid\theta,\phi)_{[m,m^\prime]} = k(x,x^\prime\mid\theta)k(m,m^\prime\mid\phi) $$
 
+これに対する有限次元の生成モデルは以下のようになります。
 
 $$ \begin{array}{l} f \sim \mathsf{MatrixNormal}(m(x),K(x\mid\alpha,\rho),C(\phi))\\ y_{i,m} \sim \mathsf{Normal}(f_{i,m},\sigma)\\ f \in \mathbb{R}^{N \times M}\end{array} $$
 
+ここで、$K(x\mid\alpha,\rho)$は、この章でずっと使ってきた指数化二乗カーネルです。また、$C(\phi)$は正定値行列で、同じベクトル$\phi$でパラメーター化されています。
+
+$\mathsf{MatrixNormal}$分布は、ふたつの共分散行列を引数に持ちます。$K(x\mid\alpha,\rho)$は列の共分散をエンコードし、$C(\phi)$は行の共分散を定義します。
+この$\mathsf{MatrixNormal}$の目立った特徴は、行列$f$の行が以下のように分布することです。
+
 $$ f_{[n,]} \sim \mathsf{MultiNormal}(m(x)_{[n,]},K(x\mid\alpha,\rho)_{[n,n]}C(\phi)) $$
+
+また、行列$f$の列は以下のように分布します。
 
 $$ f_{[,m]} \sim \mathsf{MultiNormal}(m(x)_{[,m]},K(x\mid\alpha,\rho)C(\phi)_{[m,m]}) $$
 
+これはまた、$\mathbb{E}[f^{\top}f$が$\mathrm{trace}(K(x\mid\alpha,\rho))\times C$に等しいことを意味します。一方、$\mathbb{E}[ff^{\top}]$は$\mathrm{trace(C) \times K(x\mid\alpha,\rho)$です。
+期待値の特性と、$\mathsf{MatrixNormal}$の密度を使って、これを導出することができます。
+
+$\mathrm{trace}(C)=1$と制約をつけない限り、パラメーターは識別できませんから、$\alpha$は1.0とすべきです。
+さもないと、$\alpha$にスカラー値$d$を掛け、$C$に$1/d$を掛けるとすることができ、そうしても尤度は変化しません。
+
+$\mathbb{R}^{N \times M}$における$\mathsf{MatrixNormal}$の密度から、確率変数$f$を以下のアルゴリズムを使って生成できます
+
 $$ \begin{array}{l} \eta_{i,j} \sim \mathsf{Normal}(0, 1)\,\forall i,j\\ f = L_{K(x\mid 1.0,\rho)} \eta L_C(\phi)^{\top}\\ f \sim \mathsf{MatrixNormal}(0, K(x\mid 1.0,\rho), C(\phi))\\ \eta \in \mathbb{R}^{N \times M}\\ L_C(\phi) = \mathrm{cholesky\_decompose}(C(\phi))\\ L_{K(x\mid 1.0, \rho)} = \mathrm{cholesky\_decompose}(K(x \mid 1.0, \rho)) \end{array} $$
+
+これはStanでは潜在変数GPの定式化を使って実装できます。
+$C(\phi)$に$\mathsf{LkjCorr}$を使っていますが、どんな正定値行列でもかまいません。
 
 ```
 data {
