@@ -5,7 +5,7 @@ Version 2.17.0の21章ですが、章・節・図の番号は20のままにし�
 ## 20. 微分方程式を解く
 Stanでは常微分方程式（ordinary differential equations、略してODE）の系を解くビルトインの仕組みがあります。Stanでは2つの異なるソルバーが用意されています。1つはstiffでない系を、もう片方はstiffの系を解くためにチューニングされています。
 
-- rk45: stiffでない系のための4-5次のルンゲクッタ法です。 (Dormand and Prince, 1980; Ahnert and Mulansky, 2011)
+- rk45: stiffでない系のための4–5次のルンゲクッタ法です。 (Dormand and Prince, 1980; Ahnert and Mulansky, 2011)
 - bdf: stiffな系のための、刻み幅が変動して近似の次数が変動する、後退差分公式の実装です (Cohen and Hindmarsh, 1996; Serban and Hindmarsh, 2005)
 
 stiffな常微分方程式の系に関する議論は20.5節を見てください。短く言えば、stiffな系のソルバーは遅いけれどより頑健です。どれくらいそういう傾向があるかは、解く系やパラメータ空間の領域に依存します。StanのODEソルバーの引数と返値については45章に記載があります。
