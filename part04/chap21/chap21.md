@@ -1,3 +1,5 @@
+<!-- 2.17.0を翻訳元にしています。コードの誤りはGitHubの2.17.1を参考に修正しています。 -->
+
 ## 21. 再パラメータ化と変数変換
 BUGSと同様に、Stanでは直接的な再パラメータ化がサポートされています。また、Stanでは変数変換もサポートされており、変数変換のヤコビアンの対数を対数確率の合計に直接加えることで実現します。
 
@@ -8,7 +10,15 @@ BUGSと同様に、Stanでは直接的な再パラメータ化がサポートさ
 
 
 ### 21.2. 再パラメータ化
-再パラメータ化は素直に実装できます。例えば、ベータ分布は2つの正のカウントを表すパラメータ$\alpha, \beta > 0$によってパラメータ化されています。次の例は、`vector`型のパラメータ`theta`を持つ階層的なStanのモデルを表しています。ここで、`theta`は独立同一なベータ分布から抽出されており、ベータ分布のパラメータは超事前分布から抽出されます。
+`transformed parameters`ブロックあるいは`model`ブロックだけでも、再パラメータ化は素直に実装できます。
+
+#### ベータ事前分布とディリクレ事前分布
+
+ベータ分布とディリクレ分布はともに、カウントのベクトルではなく、平均と、カウントの合計を使うように再パラメータ化できます。
+
+##### ベータ分布
+
+例えば、ベータ分布は2つの正のカウントを表すパラメータ$\alpha, \beta > 0$によってパラメータ化されています。次の例は、`vector`型のパラメータ`theta`を持つ階層的なStanのモデルを表しています。ここで、`theta`は独立同一なベータ分布から抽出されており、ベータ分布のパラメータは超事前分布から抽出されます。
 
 ```
 parameters {
@@ -25,11 +35,11 @@ model {
 
 変換パラメータ（transformed parameter）を使って超事前分布を定めた方がしばしばより自然です。ベータ分布の場合、明らかな再パラメータ化のやり方は平均パラメータ
 
-![$$\phi = \alpha / (\alpha + \beta)$$](fig/fig1.png)
+$$\phi = \alpha / (\alpha + \beta)$$
 
 とカウントの合計を表すパラメータ
 
-![$$\lambda = \alpha + \beta$$](fig/fig2.png)
+$$\lambda = \alpha + \beta$$
 
 を使う方法です。(Gelman et al., 2013, Chapter 5)に従うと、平均パラメータの事前分布に一様分布を設定し、カウントの合計を表すパラメータの事前分布に$p(\lambda) \propto \lambda^{-2.5}$のパレート分布を設定します。
 
@@ -79,8 +89,130 @@ model {
 
 もし、`alpha`と`beta`の値に興味があるならば、これらを`transformed parameters`ブロックで定義してから`model`ブロックで使うとよいでしょう。
 
-#### ヤコビアンは必要ない
+##### ヤコビアンは必要ない
 分布を与えるのではなく、変換パラメータ（transformed parameter）を使う場合は、変換に対するヤコビアンの調整は不要です。例えば、ベータ分布の例では`alpha`と`beta`は適切な事後分布を持ちます。
+
+##### ディリクレ事前分布
+
+同じことがディリクレ分布でもできます。ベータ分布の平均は確率の値ですが、ディリクレ分布はこれを単体にしたものになります。
+$K > 0$次元を考えます（$K = 1$は意味がありませんし、$K=2$はベータ分布と同じになります）。
+伝統的な事前分布は以下のようになります。
+
+```
+parameters {
+  vector[K] alpha;
+  simplex[K] theta[N];
+  ...
+model {
+  alpha ~ ...;
+  for (n in 1:N)
+    theta[n] ~ dirichlet(alpha);
+}
+```
+
+これは本質的には自由度$K$で、そのそれぞれが`alpha`の各次元に対応します。しかし、`alpha`の事前分布を合理的に指定する方法は自明ではありません。
+
+平均（ここでは単体）とカウントの合計を使う別のコーディングがあります。
+
+```
+parameters {
+  simplex[K] phi;
+  real<lower=0> kappa;
+  simplex[K] theta[N];
+  ...
+transformed parameters {
+ vector[K] alpha = kappa * phi;
+  ...
+}
+model {
+  phi ~ ...;
+  kappa ~ ...;
+  for (n in 1:N)
+    theta[n] ~ dirichlet(alpha);
+```
+
+こうすると事前分布の定式化はとても簡単になります。なぜなら、`phi`は`theta`の期待値であり、`kappa` (- `K`)は、事前の観測数で測定された事前平均の強度です。
+
+#### 制約のない事前分布の変換: プロビットとロジット
+
+変数$u$が分布を持つとすると、$\mathrm{logit}(u)$は$\mathsf{Logistic}(0,1)$に従って分布します。
+これは逆ロジットが、ロジスティック分布の累積分布関数(cdf: cumulative distribution function)だからです。したがって、ロジット関数自体は逆cdfであり、$(0,1)$からの一様な抽出をロジスティック分布に従う量にマッピングします。
+
+プロビットの場合も事情は同じです。$u$が$\mathsf{Uniform}(0,1)$という分布を持つなら、$\Phi^{-1}(u)$は$\mathsf{Normal}(0,1)$という分布になります。
+逆に、$\nu$が$\mathsf{Normal}(0,1)$という分布を持つなら、$\Phi(\nu)$は$\mathsf{Uniform}(0,1)$という分布になります。
+
+$(0,1)$の制約のついた変数の事前分布としてプロビットとロジットを使うためには、制約のない変数をつくって、それを適切に変換します。
+比較のため、以下のStanプログラム（部分）では$(0,1)$制約のパラメータ`theta`を宣言し、ベータ分布の事前分布を与え、それから分布のパラメータとして使っています（ここで`foo`はプレースホルダです）。
+
+```
+parameters {
+  real<lower = 0, upper = 1> theta;
+...
+model {
+  theta ~ beta(a, b);
+  ...
+  y ~ foo(theta);
+```
+
+変数`a`および`b`が１なら、`theta`には一様事前分布を与えることになります。
+`a`と`b`がともに1未満なら、`theta`の密度はU字型ですし、ともに1よりも大きければ、`theta`の密度は逆U字型か、さらに釣り鐘状の形になります。
+
+プロビットまたは逆ロジット変換による制約のないパラメータを使用しても、だいたい同じ結果が得られます。以下は例です。
+
+```
+parameters {
+  real theta_raw;
+...
+transformed parameters {
+  real<lower = 0, upper = 1> theta = inv_logit(theta_raw);
+...
+model {
+  theta_raw ~ logistic(mu, sigma);
+  ...
+  y ~ foo(theta);
+...
+```
+
+このモデルでは、制約のないパラメータ`theta_raw`がロジスティック事前分布を与えられており、変換パラメータ`theta`は`theta_raw`の逆ロジットと定義されています。
+このパラメータ化では、`inv_logit(mu)`が`theta`の暗黙の事前分布の平均になります。
+`theta`の事前分布は、`sigma`が1で`mu`が0のとき平坦となり、`sigma`が1より大きいときU字型に、`sigma`が1より小さいとき釣り鐘型になります。
+
+$(0,1)$の変数を単体に変換するときにも、softmax関数を使うのと同様の技法を使えます。これは、逆ロジット関数の多変量の一般化です。
+最初に、ディリクレ事前分布を与えられた単体パラメータを考えます。
+
+```
+parameters {
+  simplex[K] theta;
+...
+model {
+  theta ~ dirichlet(a);
+  ...
+  y ~ foo(theta);
+```
+
+ここで、`a`は`K`行のベクトルですが、ベータ分布の`a`と`b`の組み合わせと同じ形状特性を持っています。すなわち、パラメータベクトル$[ab]^{\top}$のディリクレ分布の最初の成分がちょうどベータ分布となります。
+制約のない事前分布の定式化には、ベータ分布とまったく同じ戦略が使えます。
+
+```
+parameters {
+  vector[K] theta_raw;
+...
+transformed parameters {
+  simplex[K] theta = softmax(theta_raw);
+...
+model {
+  theta_raw ~ multi_normal_cholesky(mu, L_Sigma);
+```
+
+多変量正規分布には、便利さと効率性のため、コレスキー因子によるパラメータ化のものを使っています。
+ここでは、平均は`softmax(mu)`で制御されますが、さらに共分散を`L_Sigma`で制御しています。そのコストとして、$K$のオーダーではなく$K^2$のオーダーのパラメータが事前分布に必要になります。
+もし共分散が必要ないのであれば、パラメータの数を$K$へ戻すことができます。ベクトル化した正規分布を使った例が以下です。
+
+```
+theta_raw ~ normal(mu, sigma);
+```
+
+ここで、`mu`と`sigma`の両方あるいはいずれか一方はベクトルでも構いません。
 
 
 ### 21.3. 変数変換
@@ -92,11 +224,11 @@ model {
 
 対数正規分布の場合、$y$の対数が平均$\mu$・標準偏差$\sigma$の正規分布に従うとすると、$y$の分布は以下で与えられます。
 
-![$$p(y) = \mathsf{Normal}(\log y \mid \mu , \sigma) \left| \frac{d}{dy}\log y \right| = \mathsf{Normal}(\log y \mid \mu , \sigma) \frac{1}{y}$$](fig/fig3.png)
+$$p(y) = \mathsf{Normal}(\log y \mid \mu , \sigma) \left| \frac{d}{dy}\log y \right| = \mathsf{Normal}(\log y \mid \mu , \sigma) \frac{1}{y}$$
 
 Stanはアンダーフローを防ぐため、対数スケールで動作します。そのため、以下の形で扱います。
 
-![$$\log p(y) = \log \mathsf{Normal}(\log y \mid \mu , \sigma) - \log y$$](fig/fig4.png)
+$$\log p(y) = \log \mathsf{Normal}(\log y \mid \mu , \sigma) - \log y$$
 
 Stanでは変数変換はサンプリング文において適用されます。曲率を調整するために、変換の微分の絶対値の対数が対数確率の合計に足しこまれます。Stanでは対数正規分布は次のように直接的に実装できます。^[この例は説明のためのものです。Stanで対数正規分布を実装するオススメの方法はビルトインの確率分布関数`lognormal`を使うことです（52.1節を見てください）。]
 
@@ -167,17 +299,17 @@ parameters {
 }
 transformed parameters {
   real<lower=0> y;
-  y = 1 / y_inv; // 変換
-  target += -2 * log(y_inv); // 調整
+  y = 1 / y_inv; // 変数変換
 }
 model {
   y ~ gamma(2,4);
+  target += -2 * log(y_inv); // ヤコビアンの調整
 }
 ```
 
 ヤコビアンによる調整は変換の微分の絶対値の対数です。ここでは以下のようになります。
 
-![$$\log \left| \frac{d}{du} \left( \frac{1}{u} \right) \right| = \log | -u^{-2} | = \log u^{-2} = -2 \log u$$](fig/fig5.png)
+$$\log \left| \frac{d}{du} \left( \frac{1}{u} \right) \right| = \log | -u^{-2} | = \log u^{-2} = -2 \log u$$
 
 
 #### 多変量の変数変換
@@ -216,7 +348,29 @@ transformed parameters {
 ### 21.4. 変化する境界をもつ`vector`
 Stanではコンテナの型に対する制約は、一つの下限と一つの上限しか宣言できません。しかし、ある`vector`型のパラメータの各要素の下限値が、同じように`vector`型で与えられているとしましょう。すると、要素ごとの変換とそのヤコビアン（これらは34章に記述があります）をStanで計算する必要があります。
 
-例えば、下限を表す`vector`$L$を持つ、パラメータの`vector`$\alpha$を考えてみましょう。以下のプログラムでは制約のないraw（生の）パラメータを宣言し、それからヤコビアンを考慮してrawパラメータを明示的に$\alpha$に変換します。
+#### 下限が変化する場合
+
+例えば、下限を表す`vector`$L$を持つ、パラメータの`vector`$\alpha$を考えてみましょう。
+$L$が定数の場合にこれを扱うもっとも単純な方法は、下限のパラメータを移動させることです。
+
+```
+data {
+  int N;
+  vector[N] L;  // 下限値
+  ...
+parameters {
+  vector<lower=0>[N] alpha_raw;
+  ...
+transformed parameters {
+  vector[N] alpha = L + alpha_raw;
+  ...
+```
+
+定数を加えることのヤコビアンは1ですから、その対数は対数密度ではなくなります。
+
+下限がデータではなくパラメータであっても、$(L,\alpha_\mathrm{raw})$から$(L+\alpha_\mathrm{raw},\alpha_\mathrm{raw})$への変換では、単位行列式を持つヤコビアン導関数行列が生成されますから、ヤコビアンは必要ありません。
+
+直接、制約のないパラメータを変換し、ヤコビアンを調整することで実装することも可能です。
 
 ```
 data {
@@ -228,11 +382,32 @@ parameters {
   ...
 transformed parameters {
   vector[N] alpha;
-  alpha = L + exp(alpha_raw);
+  alpha = L + exp(my_vec_raw);
   ...
 model {
   target += sum(alpha_raw); // ヤコビアンの対数
   ...
 ```
 
-調整項は、$\alpha_\text{raw}$から$\alpha = L + \exp(\alpha_\text{raw})$への変換に関するヤコビ行列の行列式の対数になります。この場合はヤコビ行列が対角行列になるのでシンプルになります（詳しくは34.2節をみてください）。ここで、$L$は$\alpha_\text{raw}$に依存しないパラメータを含むことすらできます。もし境界が$\alpha_\text{raw}$に依存するならば、依存性を考慮に入れてヤコビアンを計算しなおす必要があります。
+調整項は、$\alpha_\mathrm{raw}$から$\alpha = L + \exp(\alpha_\mathrm{raw})$への変換に関するヤコビ行列の行列式の対数になります。この場合はヤコビ行列が対角行列になるのでシンプルになります（詳しくは34.2節をみてください）。ここで、$L$は$\alpha_\mathrm{raw}$に依存しないパラメータを含むことすらできます。もし境界が$\alpha_\mathrm{raw}$に依存するならば、依存性を考慮に入れてヤコビアンを計算しなおす必要があります。
+
+#### 上限と下限が変化する場合
+
+下限と上限が、パラメータで可変となっているとします。
+この場合、パラメータを移動・拡大縮小させて$(0,1)$に制約するようにできます。
+
+```
+data { int N;
+  vector[N] L;  // lower bounds
+  vector[N] U;  // upper bounds
+  ...
+parameters {
+  vector<lower=0, upper=1>[N] alpha_raw;
+  ...
+transformed parameters {
+  vector[N] alpha = L + (U - L) .* alpha_raw;
+```
+
+式`U - L`と`alpha_raw`とを要素ごとに乗算して、$(0,U-L)$のベクトル変数をつくり、それに$L$を加えることで、結果は$(L,U)$の範囲の変数となります。
+
+この場合、$L$と$U$が定数であることが重要です。さもなくば、$U-L$を掛けるときにヤコビアンの調整が必要になるでしょう。
