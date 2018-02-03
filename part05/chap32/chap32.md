@@ -12,7 +12,7 @@ Stanは34章の変換を利用した自動変分推定アルゴリズムを実�
 
 $$ \phi^{*} = \mathop{\rm arg~min}\limits_\phi KL [ q(\theta \mid \phi) \parallel p(\theta \mid y)].$$
 
-典型的には，KL情報量は解析的な閉形式の会を持ちません。その代わりに，KL距離の代わりになる，変分下限(ELBO)を最大化します。
+典型的には，KL情報量は解析的な閉形式の解を持ちません。その代わりに，KL距離の代わりになる，変分下限(ELBO)を最大化します。
 
 $$\mathcal{L}(\phi) = \mathbb{E}_{q(\theta)}[ \log p(y,\theta)] - \mathbb{E}_{q(\theta)}[\log q(\theta \mid \phi)].$$
 
