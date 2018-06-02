@@ -20,17 +20,17 @@ Stanは三つの異なる最適化アルゴリズムを提供しています。�
 
 パラメータ$\theta_i$を第i番目の反復とすると，許容範囲を表す`tol_param`が以下のようになれば収束したとみなします。
 
-$$|| \theta_i - \theta_{i-1} || < tol_param $$
+$$|| \theta_i - \theta_{i-1} || < \mathtt{tol\_param} $$
 
 ##### 密度の収束
 
 パラメータ$\theta_i$についての第i番目の反復で，データ$y$に対する(正規化されていない)対数密度である $\log p(\theta_i | y)$は，許容範囲`tol_obj`が以下のようになれば収束したとみなします。
 
-$$ | \log p(\theta_i|y) - \log p(\theta_{i-1}|y) | < tol_obj $$
+$$ | \log p(\theta_i|y) - \log p(\theta_{i-1}|y) | < \mathtt{tol\_obj} $$
 
 対数密度が収束したと見なされるのは，相対的な許容範囲が次のようになる時です。
 
-$$ \frac{| \log p(\theta_i|y) - \log p(\theta_{i-1}|y) | }{max(| \log p(\theta_i|y)||\log p(\theta_{i-1}|y)|,10.) } < tol_rel_obj * \epsilon $$
+$$ \frac{| \log p(\theta_i|y) - \log p(\theta_{i-1}|y) | }{max(| \log p(\theta_i|y)||\log p(\theta_{i-1}|y)|,10.) } < \mathtt{tol\_rel\_obj} * \epsilon $$
 
 ##### 勾配の収束
 
@@ -42,7 +42,7 @@ $$ ||g_i|| < tol_grad $$
 
 勾配が0に収束したと考えられるのは，指定された相対許容範囲`tol_rel_grad`が以下のようになった時です。
 
-$$ \frac{g_i^T \hat{H}_i^{-1}g_i}{max(|\log p(\theta_i|y)|,1.0)} < tol_rel_grad * \epsilon $$
+$$ \frac{g_i^T \hat{H}_i^{-1}g_i}{max(|\log p(\theta_i|y)|,1.0)} < \mathtt{tol\_rel\_grad} * \epsilon $$
 
 ここで$\hat{H}_i$は第i番目の反復におけるヘッシアン行列で，$|u|$は$u$の絶対値(L1正規化)で，$||u||$は$u$のベクトル長(L2正規化)，$\epsilon \approx 2\bar{e} - 16$は機械精度です。
 
