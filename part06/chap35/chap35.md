@@ -36,7 +36,7 @@ $$ \frac{| \log p(\theta_i|y) - \log p(\theta_{i-1}|y) | }{max(| \log p(\theta_i
 
 勾配が0に収束したと考えられるのは，特定の許容範囲`tol_grad`が以下のようになった時です。
 
-$$ ||g_i|| < tol_grad $$
+$$ ||g_i|| < \mathtt{tol\_grad} $$
 
 ここで$\nabla_{\theta}$は$\theta$についての勾配演算子であり，$g_i = \nabla_{\theta} \log p(\theta_i | y)$は第i番目の反復における勾配です。
 
