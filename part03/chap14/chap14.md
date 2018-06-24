@@ -92,8 +92,8 @@ data {
   int<lower=0> N;
   vector[N] y;
 }
-  parameters {
-real mu;
+parameters {
+  real mu;
   real<lower=0> sigma_sq;
 }
 transformed parameters {
