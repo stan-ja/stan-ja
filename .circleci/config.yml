@@ -93,7 +93,7 @@ workflows:
             branches:
               only:
                 - master
-      - notify_github:
+      - release_github:
           requires:
             - build_all
           filters:
