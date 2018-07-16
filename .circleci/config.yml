@@ -67,7 +67,7 @@ jobs:
           at: /artifacts
       - run:
           name: release artifacts to github
-          command: build/release_github.com
+          command: build/release_github.sh
   notify_github:
     docker:
       - image: stanja/manual-builder:latest
