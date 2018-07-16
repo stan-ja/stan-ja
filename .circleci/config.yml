@@ -1,0 +1,123 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: stanja/manual-builder:latest
+    environment:
+      CIRCLE_TEST_REPORTS: /tmp/test_results
+    steps:
+      - checkout
+      - run:
+          name: prepare for pandoc
+          command: build/edit_all.sh
+      - run:
+          name: run tests
+          command: build/test_all.sh
+      - store_test_results:
+          path: /tmp/test_results
+  build_all:
+    docker:
+      - image: stanja/manual-builder:latest
+    environment:
+      CIRCLE_ARTIFACTS: /artifacts
+    steps:
+      - checkout
+      - run:
+          name: prepare for pandoc
+          command: build/edit_all.sh
+      - run:
+          name: build manual for all chapters
+          command: build/build_all.sh
+      - store_artifacts:
+          path: /artifacts
+      - persist_to_workspace:
+          root: /artifacts
+          paths:
+            - ./*.html
+            - ./*.pdf
+  build_chapter:
+    docker:
+      - image: stanja/manual-builder:latest
+    environment:
+      CIRCLE_ARTIFACTS: /artifacts
+    steps:
+      - checkout
+      - run:
+          name: prepare for pandoc
+          command: build/edit_all.sh
+      - run:
+          name: build manual for single chapter
+          command: build/build_chapter.sh
+      - store_artifacts:
+          path: /artifacts
+      - persist_to_workspace:
+          root: /artifacts
+          paths:
+            - ./*.html
+            - ./*.pdf
+  release_github:
+    docker:
+      - image: stanja/manual-builder:latest
+    environment:
+      CIRCLE_ARTIFACTS: /artifacts
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /artifacts
+      - run:
+          name: release artifacts to github
+          command: build/release_github.com
+  notify_github:
+    docker:
+      - image: stanja/manual-builder:latest
+    environment:
+      CIRCLE_ARTIFACTS: /artifacts
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /artifacts
+      - run:
+          name: send notification to the current pull request
+          command: build/notify_github.sh
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+  production:
+    jobs:
+      - build_all:
+          filters:
+            branches:
+              only:
+                - master
+      - notify_github:
+          requires:
+            - build_all
+          filters:
+            branches:
+              only:
+                - master
+  development:
+    jobs:
+      - build_chapter:
+          filters:
+            branches:
+              only:
+                - /^.*chap[0-9]*.*$/
+      - notify_github:
+          requires:
+            - build_chapter
+          filters:
+            branches:
+              only:
+                - /^.*chap[0-9]*.*$/
+  build_only:
+    jobs:
+      - build_all:
+          filters:
+            branches:
+              only:
+                - /^.*circle.*$/
