@@ -62,6 +62,7 @@ jobs:
     environment:
       CIRCLE_ARTIFACTS: /artifacts
     steps:
+      - checkout
       - attach_workspace:
           at: /artifacts
       - run:
@@ -73,6 +74,7 @@ jobs:
     environment:
       CIRCLE_ARTIFACTS: /artifacts
     steps:
+      - checkout
       - attach_workspace:
           at: /artifacts
       - run:
