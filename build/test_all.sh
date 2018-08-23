@@ -11,6 +11,11 @@ code=0
 result_collector=''
 total_elapsed=0
 
+if [ ! -d "${CIRCLE_TEST_REPORTS:-.}" ]
+then
+  mkdir -p "${CIRCLE_TEST_REPORTS:-.}"
+fi
+
 for md in `get_markdown`
 do
   test_count=`expr $test_count + 1`

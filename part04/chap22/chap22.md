@@ -1,3 +1,5 @@
+<!-- 2.17.0 を参照しました。 -->
+
 ## 22. 自作の確率分布関数
 自作の確率分布もStanの中で直接実装することができます。必要なことは対数確率の合計を累積する（インクリメントする）ことだけです。以降では2つの例を扱います。
 
@@ -5,11 +7,11 @@
 #### 三角分布
 単純な例は三角分布です。その密度関数は二等辺三角形のような形をしており、指定された境界において角をもち、密度を積分すると1になるという制約から高さが決まります。もし、$\alpha \in \mathbb{R}$と$\beta \in \mathbb{R}$が境界で、$\alpha < \beta$とすると、$y \in (\alpha, \beta)$は以下で定義される密度を持ちます。
 
-![$$\mathsf{Triangle}(y \mid \alpha,\beta) = \frac{2}{\beta - \alpha}\left( 1 - \left| y - \frac{\alpha + \beta}{\beta - \alpha} \right| \right)$$](fig/fig1.png)
+$$\mathsf{Triangle}(y \mid \alpha,\beta) = \frac{2}{\beta - \alpha}\left( 1 - \left| y - \frac{\alpha + \beta}{\beta - \alpha} \right| \right)$$
 
 もし、$\alpha = -1$、$\beta = 1$、$y \in (-1, 1)$ならば、この式は以下のように簡単になります。
 
-![$$\mathsf{Triangle}(y \mid -1,1) = 1 - |y|$$](fig/fig2.png)
+$$\mathsf{Triangle}(y \mid -1,1) = 1 - |y|$$
 
 $\mathsf{Triangle}(-1,1)$からサンプリングするため、以下のStanの実装を考えてみましょう。^[プログラムは<https://github.com/stan-dev/example-models/tree/master/basic_distributions>から入手可能です。]
 
