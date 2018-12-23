@@ -14,6 +14,119 @@ Stanの演算は，標準的な倍精度のC++整数値と浮動小数点演算�
 
 `1.0/0.0`が特別に正の無限大を返すような浮動小数点の割り算と違って，`1/0`のような整数の割り算は，標準的なC++では定義されない振る舞いになります。例えばMac　OS　Xのコンパイラclang++では3764を返しますし，g++コンパイラは例外処理に投げて警告とともにプログラムが停止します。オーバーフローの時のように，整数を0で割るようなことがないようにするのはユーザーの責任になります。
 
-#### バイナリ固定演算子
+#### バイナリ中置演算子
 
-演算子はC++シンタックスを使って記述されます。例えば，加法のバイナリ演算子は，`X+Y`と表記されますが，Stanの`int operator+(int,int)`という書き方が示すのは，二つの実引数が実数値を返すというものです。
+演算子はC++シンタックスを使って記述されます。例えば，`X+Y`と書く加法のバイナリ演算子は，Stanの書き方では`int operator+(int,int)`とし，二つの実引数が実数値を返すことを表します。
+
+```
+int operator+(int x, int y)
+```
+
+`x`と`y`を足した合計です。
+$$ operator+(x,y) = (x+y) $$
+
+```
+int operator-(int x, int y)
+```
+
+引かれる数`x`と引く数`y`の差を表します。
+$$ operator-(x,y) = (x-y) $$
+
+```
+int operator*(int x, int y)
+```
+
+因子`x`と`y`の積です。
+
+$$ operator*(x,y) = (x \times y) $$
+
+```
+int operator/(int x, int y)
+```
+
+割られる数`x`と割る数`y`の商の整数です。
+
+$$ operator/(x,y) = [x/y]$$
+
+```
+int operator%(int x, int y)
+```
+
+`x`の`y`の剰余とは，`x`を`y`で割った余りです。
+
+$$ operator%(x,y) = x mod y = x - y * [x/y] $$
+
+##### 一変量前置き演算子
+
+```
+int operator-(int x)
+```
+
+減数`x`の否定です。
+$$ operator-(x)=-x $$
+
+```
+int operator+(int x)
+```
+
+処理しません。
+$$ operator+(x)=x$$
+
+
+### 39.2 絶対値関数
+
+```
+R abs(T x)
+```
+
+値`x`の(要素ごとの)絶対値を返します。
+$$ abs(x) = |x| $$
+
+これは引数の型Tが何であっても構いません。R型の戻り値も含む詳細はセクション40.1を参照。
+
+```
+int int_step(int x)
+int int_step(real x)
+```
+整数のstepあるいは関数`x`のヘビサイドを返します。
+
+$$
+int_step(x) = \left \begin{array}{ll}
+  0 & \text{$x \le 0$のとき} \\
+  1 & \text{$x \gt 0$のとき}
+  \end{array}
+\right .
+$$
+
+データ以外のものにstep関数を適用することの危険性については，セクション40.7の注意をみてください。
+
+### 39.3 境界を示す関数
+
+```
+int min(int x, int y)
+```
+
+`x`と`y`の小さい方の値を返します。
+
+$$
+min(x,y) = \left \begin{array}{ll}
+  x & \text{if $x<y$} \\
+  y & \text{それ以外}
+  \end{array}
+\right .
+$$
+
+
+```
+int max(int x, int y)
+```
+
+`x`と`y`の大きい方の値を返します。
+
+$$
+max(x,y) = \left \begin{array}{ll}
+  x & \text{if $x>y$} \\
+  y & \text{それ以外}
+  \end{array}
+\right .
+$$
