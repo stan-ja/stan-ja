@@ -91,7 +91,7 @@ int int_step(real x)
 整数のstepあるいは関数`x`のヘビサイドを返します。
 
 $$
-int_step(x) = \left \begin{array}{ll}
+int\_step(x) = \left\{ \begin{array}{ll}
   0 & \text{$x \le 0$のとき} \\
   1 & \text{$x \gt 0$のとき}
   \end{array}
@@ -109,7 +109,7 @@ int min(int x, int y)
 `x`と`y`の小さい方の値を返します。
 
 $$
-min(x,y) = \left \begin{array}{ll}
+min(x,y) = \left\{ \begin{array}{ll}
   x & \text{if $x<y$} \\
   y & \text{それ以外}
   \end{array}
@@ -124,7 +124,7 @@ int max(int x, int y)
 `x`と`y`の大きい方の値を返します。
 
 $$
-max(x,y) = \left \begin{array}{ll}
+max(x,y) = \left\{ \begin{array}{ll}
   x & \text{if $x>y$} \\
   y & \text{それ以外}
   \end{array}
