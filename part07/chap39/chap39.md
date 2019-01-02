@@ -23,14 +23,15 @@ int operator+(int x, int y)
 ```
 
 `x`と`y`を足した合計です。
-$$ operator+(x,y) = (x+y) $$
+
+![$$ operator+(x,y) = (x+y) $$](fig/fig1.png)
 
 ```
 int operator-(int x, int y)
 ```
 
 引かれる数`x`と引く数`y`の差を表します。
-$$ operator-(x,y) = (x-y) $$
+![$$ operator-(x,y) = (x-y) $$](fig/fig2.png)
 
 ```
 int operator*(int x, int y)
@@ -38,7 +39,7 @@ int operator*(int x, int y)
 
 因子`x`と`y`の積です。
 
-$$ operator*(x,y) = (x \times y) $$
+![$$ operator*(x,y) = (x \times y) $$](fig/fig3.png)
 
 ```
 int operator/(int x, int y)
@@ -46,7 +47,7 @@ int operator/(int x, int y)
 
 割られる数`x`と割る数`y`の商の整数です。
 
-$$ operator/(x,y) = [x/y]$$
+![$$ operator/(x,y) = [x/y]$$](fig/fig4.png)
 
 ```
 int operator%(int x, int y)
@@ -54,7 +55,7 @@ int operator%(int x, int y)
 
 `x`の`y`の剰余とは，`x`を`y`で割った余りです。
 
-$$ operator%(x,y) = x mod y = x - y * [x/y] $$
+![$$ operator%(x,y) = x mod y = x - y * [x/y] $$](fig/fig5.png)
 
 ##### 一変量前置き演算子
 
@@ -63,14 +64,15 @@ int operator-(int x)
 ```
 
 減数`x`の否定です。
-$$ operator-(x)=-x $$
+
+![$$ operator-(x)=-x $$](fig/fig6.png)
 
 ```
 int operator+(int x)
 ```
 
 処理しません。
-$$ operator+(x)=x$$
+![$$ operator+(x)=x$$](fig/fig7.png)
 
 
 ### 39.2 絶対値関数
@@ -80,7 +82,8 @@ R abs(T x)
 ```
 
 値`x`の(要素ごとの)絶対値を返します。
-$$ abs(x) = |x| $$
+
+![$$ abs(x) = |x| $$](fig/fig8.png)
 
 これは引数の型Tが何であっても構いません。R型の戻り値も含む詳細はセクション40.1を参照。
 
@@ -90,13 +93,15 @@ int int_step(real x)
 ```
 整数のstepあるいは関数`x`のヘビサイドを返します。
 
-$$
+<!-- $$
 int\_step(x) = \left\{ \begin{array}{ll}
   0 & \text{$x \le 0$のとき} \\
   1 & \text{$x \gt 0$のとき}
   \end{array}
 \right .
-$$
+$$ -->
+
+![int_step](fig/fig9.png)
 
 データ以外のものにstep関数を適用することの危険性については，セクション40.7の注意をみてください。
 
@@ -108,13 +113,14 @@ int min(int x, int y)
 
 `x`と`y`の小さい方の値を返します。
 
-$$
+<!-- $$
 min(x,y) = \left\{ \begin{array}{ll}
   x & \text{if $x<y$} \\
   y & \text{それ以外}
   \end{array}
 \right .
-$$
+$$ -->
+![min](fig/fig10.png)
 
 
 ```
@@ -123,10 +129,11 @@ int max(int x, int y)
 
 `x`と`y`の大きい方の値を返します。
 
-$$
+<!-- $$
 max(x,y) = \left\{ \begin{array}{ll}
   x & \text{if $x>y$} \\
   y & \text{それ以外}
   \end{array}
 \right .
-$$
+$$ -->
+![max](fig/fig11.png)
