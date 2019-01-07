@@ -24,14 +24,14 @@ int operator+(int x, int y)
 
 `x`と`y`を足した合計です。
 
-![operator+(x,y)=(x+y)](fig/fig1.png)
+![operator_plus](fig/fig1.png)
 
 ```
 int operator-(int x, int y)
 ```
 
 引かれる数`x`と引く数`y`の差を表します。
-![operator-(x,y)=(x-y)](fig/fig2.png)
+![operator_minus](fig/fig2.png)
 
 ```
 int operator*(int x, int y)
@@ -39,7 +39,7 @@ int operator*(int x, int y)
 
 因子`x`と`y`の積です。
 
-![operator*(x,y)=(x \times y)](fig/fig3.png)
+![operator_prod](fig/fig3.png)
 
 ```
 int operator/(int x, int y)
@@ -47,7 +47,7 @@ int operator/(int x, int y)
 
 割られる数`x`と割る数`y`の商の整数です。
 
-![operator/(x,y) = (x/y)](fig/fig4.png)
+![operator_divide](fig/fig4.png)
 
 ```
 int operator%(int x, int y)
@@ -55,7 +55,7 @@ int operator%(int x, int y)
 
 `x`の`y`の剰余とは，`x`を`y`で割った余りです。
 
-![operator%(x,y) = x mod y = x - y * (x/y) ](fig/fig5.png)
+![operator_mod](fig/fig5.png)
 
 ##### 一変量前置き演算子
 
