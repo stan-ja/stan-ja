@@ -10,7 +10,7 @@
 
 #### 測定誤差のある回帰
 
-測定誤差のある回帰を考える前にまず、予測変数$x_n$と結果変数$y_n$を含む、$N$回の観測データの線形回帰モデルを考えましょう。Stanでは、傾きと切片のある、$x$についての$y$の線形回帰は以下のようにモデリングされます。
+測定誤差のある回帰を考える前にまず、予測変数$x_n$と結果変数$y_n$を含む、$N$回の観測データの線形回帰モデルを考えましょう。Stanでは、傾きと切片を含めた、$x$についての$y$の線形回帰は以下のようにモデリングされます。
 
 ```
 data {
@@ -56,7 +56,7 @@ model {
 
 測定誤差が正規分布でない場合には、もっと複雑な測定誤差モデルを指定することもできます。真値の事前分布も複雑にできます。例えば、Clayton (1992)は、既知の（測定誤差のない）リスク要因$c$に対する、未知の（ただしノイズ込みで測定された）リスク要因$x$についての暴露モデルを紹介しています。単純なモデルでは、共変量$c_n$とノイズ項$\upsilon$から$x_n$を回帰するというようになるでしょう。
 
-![$$x_{n} \sim \mathsf{Normal}(\gamma^{\top}c,\upsilon)$$](fig/fig01.png)
+$$x_{n} \sim \mathsf{Normal}(\gamma^{\top}c,\upsilon)$$
 
 これはStanでは、ほかの回帰とまったく同様にコーディングできます。もちろん、さらにほかの暴露モデルも使えます。
 
@@ -71,19 +71,19 @@ Gelman et al. (2013)の演習3.5(b)に以下の例題があります。
 
 $y_n$の丸められていない測定値を$z_n$とします。すると、述べられている問題は以下の尤度を仮定することになります。
 
-![$$z_{n} \sim \mathsf{Normal}(\mu,\sigma)$$](fig/fig02.png)
+$$z_{n} \sim \mathsf{Normal}(\mu,\sigma)$$
 
 丸めの過程により、$z_n \in (y_n - 0.5, y_n + 0.5)$となります。離散値の観測値$y$の確率質量関数は、丸められていない測定値を周辺化消去することにより与えられ、以下の尤度が得られます。
 
-![$$p(y_{n}\mid\mu,\sigma)=\int_{y_{n}-0.5}^{y_{n}+0.5}\mathsf{Normal}(z_{n}\mid\mu,\sigma)\mathrm{d}z_{n}=\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)$$](fig/fig03.png)
+$$p(y_{n}\mid\mu,\sigma)=\int_{y_{n}-0.5}^{y_{n}+0.5}\mathsf{Normal}(z_{n}\mid\mu,\sigma)\mathrm{d}z_{n}=\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)$$
 
 この問題についてのGelmanの解答では、分散$\sigma^2$について対数スケールで一様分布の無情報事前分布を使いました。このときの事前密度は（ヤコビアンの調整により）以下のようになります。
 
-![$$p(\mu,\sigma^2) \propto \frac{1}{\sigma^2}$$](fig/fig04.png)
+$$p(\mu,\sigma^2) \propto \frac{1}{\sigma^2}$$
 
 $y=(10,10,12,11,9)$を観測した後の事後分布は、ベイズの定理により計算できます。
 
-![$$\begin{array}{ll}p(\mu,\sigma^2\mid y) &\propto p(\mu,\sigma^2)p(y\mid\mu,\sigma^2)\\ &\propto \frac{1}{\sigma^2}\prod_{n=1}^{5}\left(\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)\right) \end{array}$$](fig/fig05.png)
+$$\begin{array}{ll}p(\mu,\sigma^2\mid y) &\propto p(\mu,\sigma^2)p(y\mid\mu,\sigma^2)\\ &\propto \frac{1}{\sigma^2}\prod_{n=1}^{5}\left(\Phi\left(\frac{y_{n}+0.5-\mu}{\sigma}\right)-\Phi\left(\frac{y_{n}-0.5-\mu}{\sigma}\right)\right) \end{array}$$
 
 Stanのコードは単純に数学的定義に従っており、確率関数をそのまま定義したものを、割合にするまでの例となっています。
 
@@ -98,13 +98,13 @@ parameters {
 }
 transformed parameters {
   real<lower=0> sigma;
-  sigma <- sqrt(sigma_sq);
+  sigma = sqrt(sigma_sq);
 }
 model {
-  increment_log_prob(-2 * log(sigma));
+  target += -2 * log(sigma);
   for (n in 1:N)
-    increment_log_prob(log(Phi((y[n] + 0.5 - mu) / sigma)
-                           - Phi((y[n] - 0.5 - mu) / sigma)));
+    target += log(Phi((y[n] + 0.5 - mu) / sigma)
+                  - Phi((y[n] - 0.5 - mu) / sigma));
 }
 ```
 
@@ -118,16 +118,16 @@ data {
 parameters {
   real mu;
   real<lower=0> sigma_sq;
-  vector<lower=-0.5, upper=0.5>[5] y_err;
+  vector<lower=-0.5, upper=0.5>[N] y_err;
 }
 transformed parameters {
   real<lower=0> sigma;
   vector[N] z;
-  sigma <- sqrt(sigma_sq);
-  z <- y + y_err;
+  sigma = sqrt(sigma_sq);
+  z = y + y_err;
 }
 model {
-  increment_log_prob(-2 * log(sigma));
+  target += -2 * log(sigma);
   z ~ normal(mu, sigma);
 }
 ```
@@ -146,7 +146,7 @@ model {
 
 ##### データ
 
-この臨床データは$J$個の臨床試験から成り立っています。それぞれの臨床試験について、治療群に割り付けられた人数は$n^t$、対照群に割り付けられた人数は$n^c$、治療群で改善した（成功した）人数は$r^t$、対照群で改善した（成功した）人数は$r^c$です。このデータはStanでは以下のように宣言できます。<sup>1</sup>
+この臨床データは$J$個の臨床試験から成り立っています。それぞれの臨床試験について、治療群に割り付けられた人数は$n^t$、対照群に割り付けられた人数は$n^c$、治療群で改善した（成功した）人数は$r^t$、対照群で改善した（成功した）人数は$r^c$です。このデータはStanでは以下のように宣言できます。^[Stanの整数の制約は、`r_t[h]` $le$ `n_t[j]`という制約を表現できるほど強力ではありません。しかしこの制約は、`transformed data block`でチェックすることができるでしょう。]
 
 ```
 data {
@@ -158,17 +158,15 @@ data {
 }
 ```
 
-<sup>1</sup> Stanの整数の制約は、`r_t[h]` $le$ `n_t[j]`という制約を表現できるほど強力ではありません。しかしこの制約は、`transformed data block`でチェックすることができるでしょう。
-
 ##### 対数オッズへの変換と標準誤差
 
 この臨床試験データは、そのままでは2項分布のフォーマットですが、対数オッズ比を考えると、限度のない軸に変換できるでしょう。
 
-![$$y_{j}=\log\left(\frac{r^{t}_{j}/(n^{t}_{j}-r^{t}_{j})}{r^{c}_{j}/(n^{c}_{j}-r^{c}_{j})}\right)=\log\left(\frac{r^{t}_{j}}{n^{t}_{j}-r^{t}_{j}}\right)-\log\left(\frac{r^{c}_{j}}{n^{c}_{j}-r^{c}_{j}}\right)$$](fig/fig06.png)
+$$y_{j}=\log\left(\frac{r^{t}_{j}/(n^{t}_{j}-r^{t}_{j})}{r^{c}_{j}/(n^{c}_{j}-r^{c}_{j})}\right)=\log\left(\frac{r^{t}_{j}}{n^{t}_{j}-r^{t}_{j}}\right)-\log\left(\frac{r^{c}_{j}}{n^{c}_{j}-r^{c}_{j}}\right)$$
 
 対応する標準誤差です。
 
-![$$\sigma_{j}=\sqrt{\frac{1}{r^t_j}+\frac{1}{n^t_j-r^t_j}+\frac{1}{r^c_j}+\frac{1}{n^c_j-r^c_j}}$$](fig/fig07.png)
+$$\sigma_{j}=\sqrt{\frac{1}{r^t_j}+\frac{1}{n^t_j-r^t_j}+\frac{1}{r^c_j}+\frac{1}{n^c_j-r^c_j}}$$
 
 対数オッズと標準誤差は`transformed parameters`ブロックで定義できますが、整数除算にならないように注意が必要です（39.1節参照）。
 
@@ -177,11 +175,11 @@ transformed data {
   real y[J];
   real<lower=0> sigma[J];
   for (j in 1:J)
-    y[j] <- log(r_t[j]) - log(n_t[j] - r_t[j])
+    y[j] = log(r_t[j]) - log(n_t[j] - r_t[j])
             - (log(r_c[j]) - log(n_c[j] - r_c[j]);
   for (j in 1:J)
-    sigma[j] <- sqrt(1.0/r_t[j] + 1.0/(n_t[j] - r_t[j])
-                     + 1.0/r_c[j] + 1.0/(n_c[j] - r_c[j]));
+    sigma[j] = sqrt(1 / r_t[j] + 1 / (n_t[j] - r_t[j])
+                     + 1 / r_c[j] + 1 / (n_c[j] - r_c[j]));
 }
 ```
 
@@ -220,18 +218,16 @@ parameters {
   real<lower=0> tau;  // 治療の効果の偏差
 }
 model {
-  y ~ normal(theta,sigma);
-  theta ~ normal(mu,tau);
-  mu ~ normal(0,10);
-  tau ~ cauchy(0,5);
+  y ~ normal(theta, sigma);
+  theta ~ normal(mu, tau);
+  mu ~ normal(0, 10);
+  tau ~ cauchy(0, 5);
 }
 ```
 
 ベクトル化した`y`のサンプリング文は変化ないように見えますが、パラメータ`theta`はベクトルになっています。`theta`のサンプリング文もベクトル化されており、超パラメータ`mu`と`tau`はそれ自身が、データのスケールと比較して幅の広い事前分布を与えられています。
 
-Rubin (1981)は、8つの学校での大学進学適性試験(Scholatic Aptitude Test, SAT)の指導の処理効果に関して、各学校での標本処理効果と標準誤差に基づいて、階層ベイズでメタアナリシスを行なっています。<sup>2</sup>
-
-<sup>2</sup> Gelman et al. (2013) 5.5節のこのデータについてのモデルは、Stan example modelリポジトリ, http://mc-stan.org/documentation にデータとともに入っています。
+Rubin (1981)は、8つの学校での大学進学適性試験(Scholatic Aptitude Test, SAT)の指導の処理効果に関して、各学校での標本処理効果と標準誤差に基づいて、階層ベイズでメタアナリシスを行なっています。^[Gelman et al. (2013) 5.5節のこのデータについてのモデルは、Stan example modelリポジトリ, http://mc-stan.org/documentation にデータとともに入っています。]
 
 ##### 拡張と代替法
 

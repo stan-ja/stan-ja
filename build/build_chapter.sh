@@ -15,6 +15,11 @@ then
   exit 1
 fi
 
+if [ ! -d "${CIRCLE_ARTIFACTS:-.}" ]
+then
+  mkdir -p "${CIRCLE_ARTIFACTS:-.}"
+fi
+
 $PANDOC_PDF \
   -o "${CIRCLE_ARTIFACTS:-.}/stan-reference-2.16.0-ja-$chapter.pdf" \
   $target
