@@ -189,7 +189,7 @@ StanでElastic Netを実装するときも、`data`、`parameters`、`model`の�
 generated quantities {
   vector[K] beta_elastic_net;
   // ...
-  beta_elastic_net <- (1 + lambda2) * beta;
+  beta_elastic_net = (1 + lambda2) * beta;
 }
 ```
 
