@@ -40,7 +40,7 @@ real prod(real x[])
 ```text
 real prod(int x[])
 ```
-`x`の要素の総乗を返す。　　
+`x`の要素の総乗を返す。
 
 ![$$\mbox{\tt product}(x) = \left\{\begin{array}{ll} \prod_{n=1}^{N}x_{n} & \mbox{if} N > 0 \\ 1 & \mbox{if} N = 0 \end{array}\right.$$](fig/fig2.png)
 ```text
@@ -194,7 +194,7 @@ T[] rep_array(T x, int n)
 T[] rep_array(T x, int m, int n)
 ```
 
-全ての要素に`x`を割り当てた$m \items n$サイズの配列を返します。
+全ての要素に`x`を割り当てた$m \times n$サイズの配列を返します。
 
 ```
 T[ , , ] rep_array(T x, int k, int m, int n)
