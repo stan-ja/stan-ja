@@ -66,7 +66,7 @@ real variance(real x[])
 
 `x`の要素の標本分散を返します。サイズ$N>0$である配列`x`に対して，
 
-![\operatorname{variance}(x)=\left\{\begin{array}{ll}{\frac{1}{\sqrt{-1}} \sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)^{2}} & {\text { if } N>1} \\ {0} & {\text { if } N=1}\end{array}\right.$$](fig/fig3.png)
+![$$\operatorname{variance}(x)=\left\{\begin{array}{ll}{\frac{1}{\sqrt{-1}} \sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)^{2}} & {\text { if } N>1} \\ {0} & {\text { if } N=1}\end{array}\right.$$](fig/fig3.png)
 
 で定義されます。ただし，配列のサイズが0のとき`variance`関数はエラーを返します。
 
@@ -115,7 +115,7 @@ real squared_distance(vector x, vector y)
 
 `x`と`y`の距離の二乗は，
 
-![\text { squared distance }(x, y)=\operatorname{distance}(x, y)^{2}=\sum_{n=1}^{N}\left(x_{n}-y_{n}\right)^{2}](fig/fig6.png)
+![$$\text { squared distance }(x, y)=\operatorname{distance}(x, y)^{2}=\sum_{n=1}^{N}\left(x_{n}-y_{n}\right)^{2}$$](fig/fig6.png)
 
 で定義されます。ここで$N$は`x`および`y`のサイズです。サイズの等しくない引数を取った場合，`squared_distance`関数はエラーを返します。
 
