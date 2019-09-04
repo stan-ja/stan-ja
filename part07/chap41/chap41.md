@@ -66,7 +66,7 @@ real variance(real x[])
 
 `x`の要素の標本分散を返します。サイズ$N>0$である配列`x`に対して，
 
-![$$\operatorname{variance}(x)=\left\{\begin{array}{ll}{\frac{1}{\sqrt{-1}} \sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)^{2}} & {\text { if } N>1} \\ {0} & {\text { if } N=1}\end{array}\right.$$](fig/fig3.png)
+![$$\operatorname{variance}(x)=\left\{\begin{array}{ll}{\frac{1}{\sqrt{N-1}} \sum_{n=1}^{N}\left(x_{n}-\overline{x}\right)^{2}} & {\text { if } N>1} \\ {0} & {\text { if } N=1}\end{array}\right.$$](fig/fig3.png)
 
 で定義されます。ただし，配列のサイズが0のとき`variance`関数はエラーを返します。
 
