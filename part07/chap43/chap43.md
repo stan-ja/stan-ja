@@ -12,19 +12,19 @@ $$  A=\left[\begin{array}{cccc}{19} & {27} & {0} & {0} \\ {0} & {0} & {0} & {0} 
 
 は，行列$A$から行ごとに読み込んだ非ゼロの実数ベクトルに書き換えられ，
 
-$$w(A)=\left[\begin{array}{llllll}{19} & {27} & {52} & {81} & {95} & {33}\end{array}\right]^T$$
+$$ w(A)=\left[\begin{array}{llllll}{19} & {27} & {52} & {81} & {95} & {33}\end{array}\right]^T $$
 
 となり，ここで値の列インデックスをもつ整数配列，
 
-$$v(A)=\left[\begin{array}{llllll}{1} & {2} & {4} & {1} & {3} & {4}\end{array}\right]$$
+$$ v(A)=\left[\begin{array}{llllll}{1} & {2} & {4} & {1} & {3} & {4}\end{array}\right] $$
 
 と，$w(A)$のどこから所与の行の値がスタートするかを示すインデックスを持つ整数配列，
 
-$$u(A)=\left[\begin{array}{lllll}{1} & {3} & {3} & {4} & {7}\end{array}\right]$$
+$$ u(A) = \left[ \begin{array}{lllll} {1} & {3} & {3} & {4} & {7}\end{array} \right] $$
 
 が，保証のために数値を次のように詰め合わせたもの，
 
-$$ u(A)\left\[n+1\right\] - u(A)\left\[n\right\]$$
+$$ u(A) \left[ n+1 \right] - u(A) \left[ n \right ]$$
 
 と一緒にされます。最後の数字は，もとの行列における第$n$行目の非ゼロの要素の数(ここではそれぞれ2,0,1,3です)を表しています。二行目は非ゼロの要素を持っていないので，$u(A)$での第二，第三の要素と，それに対応する$w(A)$の第三の要素が52であることに注意してください。$(w(A),v(A),u(A))$の数字があれば，$A$を再構成するには十分なのです。
 
